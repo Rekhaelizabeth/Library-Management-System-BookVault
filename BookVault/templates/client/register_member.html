@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Member</title>
+</head>
+<body>
+    <h1>Register Member</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone"><br><br>
+
+        <label for="addressline">Address Line:</label><br>
+        <input type="text" id="addressline" name="addressline" required><br><br>
+
+        <label for="city">City:</label><br>
+        <input type="text" id="city" name="city" required><br><br>
+
+        <label for="state">State:</label><br>
+        <input type="text" id="state" name="state" required><br><br>
+
+        <label for="country">Country:</label><br>
+        <input type="text" id="country" name="country" required><br><br>
+
+        <label for="postal_code">Postal Code:</label><br>
+        <input type="text" id="postal_code" name="postal_code" required><br><br>
+
+        <label for="membership_type">Membership Type:</label><br>
+        <select id="membership_type" name="membership_type" required>
+            <option value="Student">Student</option>
+            <option value="Faculty">Faculty</option>
+            <option value="General">General</option>
+        </select><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
