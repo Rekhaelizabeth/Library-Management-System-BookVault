@@ -3,11 +3,14 @@ from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http import HttpResponse
 from .models import User, Address, MemberProfile
-
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home(request):
     return render(request, 'client/index.html')
+
+# def login(request):
+#     return render(request, 'client/login.html')
 
 def register_librarian(request):
     if request.method == "POST":
@@ -111,10 +114,41 @@ def register_membercategory(request):
 
 
 
+def user_login(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        # Authenticate the user using the email and password
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            
+            # Redirect based on the user role
+            if user.role == 'Admin':
+                return redirect('admin_dashboard')  # Replace with your Admin dashboard URL
+            elif user.role == 'Librarian':
+                return redirect('librarian_dashboard')  # Replace with your Librarian dashboard URL
+            elif user.role == 'Member':
+                return redirect('member_dashboard')  # Replace with your Member dashboard URL
+            else:
+                return redirect('home')  # Default fallback
+        else:
+            messages.error(request, 'Invalid email or password')
+            return redirect('login')  # Replace with the URL name of your login page
+
+    return render(request, 'client/login.html')
 
 
 
+def admin_dashboard(request):
+    return render(request, 'client/admin_dashboard.html')
 
+def librarian_dashboard(request):
+    return render(request, 'client/librarian_dashboard.html')
 
+def member_dashboard(request):
+    return render(request, 'client/member_dashboard.html')
 
 

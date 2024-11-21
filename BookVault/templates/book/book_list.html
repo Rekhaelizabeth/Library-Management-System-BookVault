@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong><br>
+                Author: {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                Genre: {{ book.genre.name }}<br>
+                Availability: {{ book.get_availability_display }}<br>
+                <img src="{{ book.cover_image.url }}" alt="Cover image" width="100"><br>
+                <p>{{ book.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

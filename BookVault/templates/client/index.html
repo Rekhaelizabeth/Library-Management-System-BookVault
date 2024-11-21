@@ -33,8 +33,18 @@
 				<div class="container">
 					<nav id="navigation" class="navigation navigation-landscape">
 						<div class="nav-header">
-							<a class="nav-brand static-logo" href="index.html#"><img src="{% static 'assets/img/logo-light.png' %}" class="logo" alt="" /></a>
-							<a class="nav-brand fixed-logo" href="index.html#"><img src="{% static 'assets/img/logo.png' %}" class="logo" alt="" /></a>
+							<a class="nav-brand static-logo" href="index.html#"><img 
+								src="{% static 'assets/logo/booklogo.jpg' %}" 
+								class="logo" 
+								alt="Logo" 
+								style="height: 75px; width: 75px;" />
+							  
+							<a class="nav-brand fixed-logo" href="index.html#"><img 
+								src="{% static 'assets/logo/booklogo.jpg' %}" 
+								class="logo" 
+								alt="Logo" 
+								style="height: 25px; width: 25px;" />
+							  
 							<div class="nav-toggle"></div>
 							<div class="mobile_nav">
 								<ul>
@@ -142,12 +152,12 @@
 							<ul class="nav-menu nav-menu-social align-to-right">
 								
 								<li>
-									<a href="index.html#" class="alio_green" data-bs-toggle="modal" data-bs-target="#login">
+									<a href="{% url 'login' %}" 		>
 										<i class="fas fa-sign-in-alt me-2"></i><span class="dn-lg">Sign In</span>
 									</a>
 								</li>
 								<li class="add-listing">
-									<a href="submit-property.html"  class="bg-danger">
+									<a href="{% url 'book_list' %}"  class="bg-danger">
 										 <i class="fas fa-plus-circle me-2"></i>Add Property
 									</a>
 								</li>
