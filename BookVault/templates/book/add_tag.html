@@ -1,0 +1,11 @@
+
+<h2>Add Tag</h2>
+<form method="POST">
+    {% csrf_token %}
+    <label for="name">Tag Name:</label>
+    <input type="text" name="name" id="name" required>
+    <button type="submit">Add Tag</button>
+</form>
+{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}

@@ -12,6 +12,22 @@
         <link href="{% static 'assets/css/styles.css' %}" rel="stylesheet">
 		
     </head>
+	<style>
+		.fixed-logo {
+			display: inline-block; /* Ensure proper alignment */
+			position: relative; /* Allows for positioning adjustments */
+			top: -40px; /* Adjust the value to move the logo higher */
+		}
+		.static-logo {
+			display: inline-block; /* Ensure proper alignment */
+			position: relative; /* Allows for positioning adjustments */
+			top: -55px; /* Adjust the value to move the logo higher */
+		}
+		
+		
+		
+		
+	</style>
 	
     <body class="yellow-skin">
 	
@@ -34,16 +50,16 @@
 					<nav id="navigation" class="navigation navigation-landscape">
 						<div class="nav-header">
 							<a class="nav-brand static-logo" href="index.html#"><img 
-								src="{% static 'assets/logo/booklogo.jpg' %}" 
+								src="{% static 'assets/logo/logo-png-removebg-preview.png' %}" 
 								class="logo" 
 								alt="Logo" 
-								style="height: 75px; width: 75px;" />
+								style="height: 150px; width: 155px;" />
 							  
 							<a class="nav-brand fixed-logo" href="index.html#"><img 
-								src="{% static 'assets/logo/booklogo.jpg' %}" 
+								src="{% static 'assets/logo/logo-png-removebg-preview.png' %}" 
 								class="logo" 
 								alt="Logo" 
-								style="height: 25px; width: 25px;" />
+								style="height: 125px; width: 125px;" />
 							  
 							<div class="nav-toggle"></div>
 							<div class="mobile_nav">
@@ -174,7 +190,7 @@
 			
 			
 			<!-- ============================ Hero Banner  Start================================== -->
-			<div class="image-cover hero_banner" style="background:url({% static 'assets/img/banner-home.jpg' %}) no-repeat;" data-overlay="4">
+			<div class="image-cover hero_banner" style="background:url({% static 'assets/img/Book_backgroungimage.jpg' %}) no-repeat;" data-overlay="4">
 				<div class="container">
 					
 					<h1 class="big-header-capt mb-0">Search Your Next Home</h1>
