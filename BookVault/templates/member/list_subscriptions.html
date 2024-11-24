@@ -10,7 +10,7 @@
         <p>Book Reservation Limit: {{ subscription.book_reservation_count }}</p>
         <p>Issue Book Limit: {{ subscription.issue_book_count }}</p>
         <p>External Library Access: {{ subscription.external_library_access|yesno:"Yes,No" }}</p>
-        {% comment %} <a href="{% url 'subscribe_to_plan' subscription.id %}">Subscribe</a> {% endcomment %}
+        <a href="{% url 'subscribe_to_plan' subscription.id %}">Subscribe</a>
     </li>
     {% endfor %}
 </ul>

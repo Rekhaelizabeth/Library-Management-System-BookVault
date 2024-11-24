@@ -139,3 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL='usermanagement.User'
+
+RAZOR_KEY_ID = 'rzp_test_SAE73pNhXjw2pC'
+RAZOR_KEY_SECRET = 'jDHj6W4dBaJ1yQPXcqR2Raqe'
+

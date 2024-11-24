@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Payment</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <h1>Pay for {{ subscription.plan_name }}</h1>
+    <p>Amount: ₹{{ amount|floatformat:2 }}</p>
+
+    <button id="rzp-button">Pay Now</button>
+
+    <form id="payment-form" method="post" action="{% url 'verify_payment' %}">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    </form>
+
+    <script>
+        const options = {
+            key: "{{ razorpay_key_id }}",
+            amount: "{{ amount }}",
+            currency: "INR",
+            name: "Library Management System",
+            description: "Subscription Payment",
+            order_id: "{{ order_id }}",
+            handler: function (response) {
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature,
+                document.getElementById('payment-form').submit();
+            },
+        };
+        const rzp = new Razorpay(options);
+        document.getElementById('rzp-button').onclick = function (e) {
+            rzp.open();
+            e.preventDefault();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+
+<h1>Subscribe to {{ subscription.plan_name }}</h1>
+<p>Price: ${{ subscription.price }}</p>
+<p>Duration: {{ subscription.time_period }} days</p>
+<p>Book Reservation Limit: {{ subscription.book_reservation_count }}</p>
+<p>Issue Book Limit: {{ subscription.issue_book_count }}</p>
+<p>External Library Access: {{ subscription.external_library_access|yesno:"Yes,No" }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Proceed to Payment</button>
+</form>
+
