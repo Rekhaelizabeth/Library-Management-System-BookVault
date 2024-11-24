@@ -97,6 +97,22 @@ class LibrarianProfile(models.Model):
     def str(self):
         return f"Librarian: {self.user.name}"
     
+    
+class Subscription(models.Model):
+    plan_name = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Example: 999.99
+    time_period = models.IntegerField(help_text="Duration of the subscription in days")  # Example: 30 days
+    book_reservation_count = models.IntegerField(default=0, help_text="Number of books a user can reserve")
+    issue_book_count = models.IntegerField(default=0, help_text="Number of books a user can issue at a time")
+    external_library_access = models.BooleanField(default=False, help_text="Whether the subscription includes external library access")
+
+    def __str__(self):
+        return f"{self.plan_name} Plan"
+
+    class Meta:
+        verbose_name = "Subscription"
+        verbose_name_plural = "Subscriptions"
+
 class MemberProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     membership_type = models.CharField(
@@ -112,7 +128,18 @@ class MemberProfile(models.Model):
     outstanding_fines = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     reserved_books_count = models.IntegerField(default=0)
     favorite_genres = models.CharField(max_length=255, blank=True, null=True)
+    subscription = models.ForeignKey(
+        Subscription, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name="members"
+    )  # ForeignKey allows multiple members to share the same subscription.
+
 
 
     def str(self):
         return f"Member: {self.user.name}"
+    
+
+

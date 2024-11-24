@@ -7,28 +7,36 @@
     <link rel="canonical" href="index.html">
     <meta name="description" content="Awesome responsive dashboard build with Tailwind CSS &amp; AlpineJS.">
     
-    <title>Meraki UI Dashboard </title>
+    <title>Admin Dashboard </title>
 
-    <link rel="stylesheet" href="assets/build/css/main.css">
+    <link rel="stylesheet" href="{% static 'assets/build/css/main.css' %}">
+     
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/images/logo.svg' %}">
 
-    <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
-
-    <script defer src="assets/build/js/main.js"></script>
+    <script defer src="{% static 'assets/build/js/main.js' %}"></script>
 </head>
 <body class="overflow-hidden">
     <div x-data="{ sidebarOpen: false }" class="relative flex h-screen text-gray-800 bg-white font-roboto">
         <div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
 
 <div x-cloak :class="sidebarOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'" class="fixed inset-y-0 left-0 z-30 w-64 px-4 overflow-y-auto transition duration-200 transform bg-white border-r border-gray-100 lg:translate-x-0 lg:relative lg:inset-0 ">
-    <div class="flex items-center mt-8">
-        <img class="w-auto h-8" src="assets/images/full-logo.svg" alt="">
+    <div class="flex items-center mt-8" style="position: relative;">
+        <a class="nav-brand fixed-logo" href="index.html#">
+            <img 
+                src="{% static 'assets/logo/logocrop.png' %}" 
+                class="logo" 
+                alt="Logo" 
+                style="height: 35px; width: 180px;" 
+            />
+        </a>
     </div>
+    
 
     <hr class="my-6 border-gray-100">
 
     <nav class="space-y-8">
         <div class="space-y-4">
-            <h3 class="px-4 text-sm tracking-wider text-gray-400 uppercase">PAGES</h3>
+
     
             <a class="flex items-center px-4 py-2 text-gray-600 transition-colors duration-200 transform bg-gray-200 rounded-lg bg-opacity-40" href="index.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +94,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                         </svg>
     
-                        <span class="mx-3 font-medium capitalize">Example</span>
+                        <span class="mx-3 font-medium capitalize">Book</span>
                     </span>
     
                     <span class="rtl:rotate-180">
@@ -107,8 +115,11 @@
                     x-transition:leave-end="opacity-0 -translate-y-5"
                     class="mt-2"
                 >
-                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="blank.html">Blank</a>
-                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="404.html">404</a>
+                <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_book' %}">Add Book</a>
+                <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_tag' %}">Add Tags</a>
+                <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_genre' %}">Add Genre</a>
+                <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_author' %}">Add Author</a>
+                <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'inventory' %}">Inventory </a>
                 </div>
             </div>
         </div>

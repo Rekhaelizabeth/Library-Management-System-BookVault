@@ -2,13 +2,36 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http import HttpResponse
-from .models import User, Address, MemberProfile
+from .models import User, Address, MemberProfile, Subscription
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home(request):
     return render(request, 'client/index.html')
+def add_subscription(request):
+    if request.method == "POST":
+        plan_name = request.POST.get("plan_name")
+        price = request.POST.get("price")
+        time_period = request.POST.get("time_period")
+        book_reservation_count = request.POST.get("book_reservation_count")
+        issue_book_count = request.POST.get("issue_book_count")
+        external_library_access = request.POST.get("external_library_access") == "True"
 
+        # Create a new Subscription object
+        Subscription.objects.create(
+            plan_name=plan_name,
+            price=price,
+            time_period=time_period,
+            book_reservation_count=book_reservation_count,
+            issue_book_count=issue_book_count,
+            external_library_access=external_library_access,
+        )
+
+        messages.success(request, "Subscription plan added successfully!")
+        return redirect("add_subscription")  # Redirect to the same page or another
+
+
+    return render(request, 'member/add_subscription.html')
 # def login(request):
 #     return render(request, 'client/login.html')
 
@@ -150,5 +173,9 @@ def librarian_dashboard(request):
 
 def member_dashboard(request):
     return render(request, 'client/member_dashboard.html')
+
+def admindashboard(request):
+    return render(request, 'admin/index.html')
+
 
 

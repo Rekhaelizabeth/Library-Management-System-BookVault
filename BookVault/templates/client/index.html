@@ -16,7 +16,7 @@
 		.fixed-logo {
 			display: inline-block; /* Ensure proper alignment */
 			position: relative; /* Allows for positioning adjustments */
-			top: -40px; /* Adjust the value to move the logo higher */
+			top: -2px; /* Adjust the value to move the logo higher */
 		}
 		.static-logo {
 			display: inline-block; /* Ensure proper alignment */
@@ -56,10 +56,10 @@
 								style="height: 150px; width: 155px;" />
 							  
 							<a class="nav-brand fixed-logo" href="index.html#"><img 
-								src="{% static 'assets/logo/logo-png-removebg-preview.png' %}" 
+								src="{% static 'assets/logo/logocrop.png' %}" 
 								class="logo" 
 								alt="Logo" 
-								style="height: 125px; width: 125px;" />
+								style="height: 35px; width: 180px;" />
 							  
 							<div class="nav-toggle"></div>
 							<div class="mobile_nav">
@@ -71,7 +71,7 @@
 						</div>
 						<div class="nav-menus-wrapper" style="transition-property: none;">
 							<ul class="nav-menu">
-							
+								<li><a href="{% url 'admindashboard' %}">Home<span class="submenu-indicator"></span></a>
 								<li><a href="index.html#">Home<span class="submenu-indicator"></span></a>
 									<ul class="nav-dropdown nav-submenu">
 										<li><a href="index.html">Home 1</a></li>

@@ -37,45 +37,59 @@ def add_author(request):
     return render(request, 'book/add_author.html')
 
 def add_book(request):
-    authors = Author.objects.all()
-    genres = Genre.objects.all()
-    tags = Tag.objects.all()
-    
-    if request.method == 'POST':
+    if request.method == "POST":
         isbn = request.POST.get('isbn')
         title = request.POST.get('title')
         author_id = request.POST.get('author')
         publisher = request.POST.get('publisher')
         publication_year = request.POST.get('publication_year')
-        edition = request.POST.get('edition')
+        edition = request.POST.get('edition', None)
         language = request.POST.get('language')
         genre_id = request.POST.get('genre')
         description = request.POST.get('description')
         availability = request.POST.get('availability')
-        
-        author = Author.objects.get(id=author_id)
-        genre = Genre.objects.get(id=genre_id)
-        
-        book = Book.objects.create(
-            isbn=isbn,
-            title=title,
-            author=author,
-            publisher=publisher,
-            publication_year=publication_year,
-            edition=edition,
-            language=language,
-            genre=genre,
-            description=description,
-            availability=availability
-        )
-        
-        # Add tags
-        selected_tags = request.POST.getlist('tags')
-        for tag_id in selected_tags:
-            tag = Tag.objects.get(id=tag_id)
-            book.tags.add(tag)
-        
-        messages.success(request, 'Book added successfully!')
-        return redirect('add_book')
-    
-    return render(request, 'book/add_book.html', {'authors': authors, 'genres': genres, 'tags': tags})
+        tags_ids = request.POST.getlist('tags')  # Collect all checked tag IDs
+        related_titles_ids = request.POST.getlist('related_titles')  # Collect all related titles IDs
+        cover_image = request.FILES.get('cover_image', None)
+
+        try:
+            author = Author.objects.get(id=author_id)
+            genre = Genre.objects.get(id=genre_id)
+            book = Book.objects.create(
+                isbn=isbn,
+                title=title,
+                author=author,
+                publisher=publisher,
+                publication_year=publication_year,
+                edition=edition,
+                language=language,
+                genre=genre,
+                description=description,
+                availability=availability,
+                cover_image=cover_image,
+            )
+            # Add tags to the book
+            tags = Tag.objects.filter(id__in=tags_ids)
+            book.tags.set(tags)
+            
+            related_books = Book.objects.filter(id__in=related_titles_ids)
+            book.related_titles.set(related_books)
+
+            messages.success(request, "Book added successfully!")
+            return redirect('add_book')  # Redirect to the same page or another page
+        except Exception as e:
+            messages.error(request, f"Error adding book: {e}")
+
+    authors = Author.objects.all()
+    genres = Genre.objects.all()
+    tags = Tag.objects.all()
+    books = Book.objects.all()
+    return render(request, 'book/add_book.html', {
+        'authors': authors,
+        'genres': genres,
+        'tags': tags,
+        'books': books,
+    })
+
+def inventory(request):
+    return render(request, 'book/inventory.html')

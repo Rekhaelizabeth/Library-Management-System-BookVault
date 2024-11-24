@@ -1,0 +1,37 @@
+member subscription
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subscription</title>
+</head>
+<body>
+    <h1>Add Subscription Plan</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="plan_name">Plan Name:</label><br>
+        <input type="text" id="plan_name" name="plan_name" required><br><br>
+
+        <label for="price">Price:</label><br>
+        <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+        <label for="time_period">Time Period (days):</label><br>
+        <input type="number" id="time_period" name="time_period" required><br><br>
+
+        <label for="book_reservation_count">Book Reservation Count:</label><br>
+        <input type="number" id="book_reservation_count" name="book_reservation_count" required><br><br>
+
+        <label for="issue_book_count">Issue Book Count:</label><br>
+        <input type="number" id="issue_book_count" name="issue_book_count" required><br><br>
+
+        <label for="external_library_access">External Library Access:</label><br>
+        <select id="external_library_access" name="external_library_access" required>
+            <option value="True">Yes</option>
+            <option value="False">No</option>
+        </select><br><br>
+
+        <button type="submit">Add Subscription</button>
+    </form>
+</body>
+</html>

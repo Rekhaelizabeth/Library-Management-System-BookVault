@@ -1,0 +1,17 @@
+
+
+<h1>Available Subscriptions</h1>
+<ul>
+    {% for subscription in subscriptions %}
+    <li>
+        <h3>{{ subscription.plan_name }}</h3>
+        <p>Price: ${{ subscription.price }}</p>
+        <p>Duration: {{ subscription.time_period }} days</p>
+        <p>Book Reservation Limit: {{ subscription.book_reservation_count }}</p>
+        <p>Issue Book Limit: {{ subscription.issue_book_count }}</p>
+        <p>External Library Access: {{ subscription.external_library_access|yesno:"Yes,No" }}</p>
+        {% comment %} <a href="{% url 'subscribe_to_plan' subscription.id %}">Subscribe</a> {% endcomment %}
+    </li>
+    {% endfor %}
+</ul>
+

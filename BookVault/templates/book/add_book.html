@@ -1,6 +1,7 @@
 <h2>Add Book</h2>
-<form method="POST">
+<form method="POST" enctype="multipart/form-data"> <!-- Add enctype for file uploads -->
     {% csrf_token %}
+    
     <label for="isbn">ISBN:</label>
     <input type="text" name="isbn" id="isbn" required>
     
@@ -33,12 +34,19 @@
         {% endfor %}
     </select>
     
-    <label for="tags">Tags:</label>
-    <select name="tags" id="tags" multiple>
+    <label>Tags:</label>
+    <div id="tags">
         {% for tag in tags %}
-        <option value="{{ tag.id }}">{{ tag.name }}</option>
+        <div>
+            <input type="checkbox" name="tags" value="{{ tag.id }}" id="tag_{{ tag.id }}">
+            <label for="tag_{{ tag.id }}">{{ tag.name }}</label>
+        </div>
         {% endfor %}
-    </select>
+    </div>
+    
+    
+    <label for="cover_image">Cover Image:</label>
+    <input type="file" name="cover_image" id="cover_image" accept="image/*"> <!-- Accept images only -->
     
     <label for="description">Description:</label>
     <textarea name="description" id="description" required></textarea>
@@ -50,9 +58,18 @@
         <option value="damaged">Damaged</option>
         <option value="lost">Lost</option>
     </select>
-    
+    <label for="related_titles">Related Titles:</label>
+    <div id="related_titles">
+        {% for book in books %}
+        <div>
+            <input type="checkbox" name="related_titles" value="{{ book.id }}" id="related_title_{{ book.id }}">
+            <label for="related_title_{{ book.id }}">{{ book.title }}</label>
+        </div>
+        {% endfor %}
+    </div>
     <button type="submit">Add Book</button>
 </form>
+
 {% for message in messages %}
     <p>{{ message }}</p>
 {% endfor %}

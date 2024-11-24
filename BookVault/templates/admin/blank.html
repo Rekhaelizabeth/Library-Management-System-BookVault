@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +9,11 @@
     
     <title>Meraki UI Dashboard </title>
 
-    <link rel="stylesheet" href="assets/build/css/main.css%3Fid=338a33ffc2adb911c9d788d65d90e8a5.css">
+    <link rel="stylesheet" href="{% static 'assets/build/css/main.css%3Fid=338a33ffc2adb911c9d788d65d90e8a5.css' %}">
 
-    <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/images/logo.svg' %}">
 
-    <script defer src="assets/build/js/main.js%3Fid=7a85d29ed8f1e7869c43a8c9a7f4f6a1"></script>
+    <script defer src="{% static 'assets/build/js/main.js%3Fid=7a85d29ed8f1e7869c43a8c9a7f4f6a1' %}"></script>
 </head>
 <body class="overflow-hidden">
     <div x-data="{ sidebarOpen: false }" class="relative flex h-screen text-gray-800 bg-white font-roboto">
@@ -20,7 +21,7 @@
 
 <div x-cloak :class="sidebarOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'" class="fixed inset-y-0 left-0 z-30 w-64 px-4 overflow-y-auto transition duration-200 transform bg-white border-r border-gray-100 lg:translate-x-0 lg:relative lg:inset-0 ">
     <div class="flex items-center mt-8">
-        <img class="w-auto h-8" src="assets/images/full-logo.svg" alt="">
+        <img class="w-auto h-8" src="{% static 'assets/images/full-logo.svg' %}" alt="">
     </div>
 
     <hr class="my-6 border-gray-100">
