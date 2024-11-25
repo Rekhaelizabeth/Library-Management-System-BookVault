@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -11,5 +12,8 @@ urlpatterns = [
     path('member_dashboard/', views.member_dashboard, name='member_dashboard'),
     path('add_subscription/', views.add_subscription, name='add_subscription'),
     path('admindashboard/', views.admindashboard, name='admindashboard'),
+    path('logout/', views.custom_logout, name='logout'),
+    path('profile/', views.profile_view, name='profile'),
+    path('generate_qr_code/', views.generate_qr_code, name='generate_qr_code'),
     
 ]

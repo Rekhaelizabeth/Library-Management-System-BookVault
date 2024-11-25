@@ -65,7 +65,7 @@ def subscribe_to_plan(request, subscription_id):
         except Exception as e:
             # Log the error (optional) and redirect to the error page
             print(f"Error occurred: {e}")
-            return redirect("error_page")  # Replace 'error_page' with the name of your error page's URL
+            return redirect("home")  # Replace 'error_page' with the name of your error page's URL
 
     # Render the subscription selection page for GET requests
     return render(request, "member/subscribe_to_plan.html", {"subscription": subscription})

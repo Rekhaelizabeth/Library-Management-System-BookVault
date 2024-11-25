@@ -23,6 +23,11 @@
 			position: relative; /* Allows for positioning adjustments */
 			top: -55px; /* Adjust the value to move the logo higher */
 		}
+		.icon-size {
+			width: 30px;  /* Adjust the width as needed */
+			height: 30px; /* Adjust the height to maintain aspect ratio */
+			}
+
 		
 		
 		
@@ -170,15 +175,40 @@
 							<ul class="nav-menu nav-menu-social align-to-right">
 								
 								<li>
-									<a href="{% url 'login' %}" 		>
-										<i class="fas fa-sign-in-alt me-2"></i><span class="dn-lg">Sign In</span>
-									</a>
+									
 								</li>
 								<li class="add-listing">
-									<a href="{% url 'book_list' %}"  class="bg-danger">
-										 <i class="fas fa-plus-circle me-2"></i>Add Property
+									<a class="bg-danger" href="{% url 'profile'%}">
+										{% if user.is_authenticated %}
+											<span>{{ user }}</span>
+											{% if user.gender == "male" %}
+    											<img src="{% static 'assets/images/boy.png' %}" class="img-fluid mx-auto icon-size" alt="Boy Image" />
+												{% endif %}
+
+													{% if user.gender == "female" %}
+														<img src="{% static 'assets/images/woman.png' %}" class="img-fluid mx-auto icon-size" alt="Woman Image" />
+
+													{% endif %}
+													<a href="{% url 'logout' %}">
+												<i class="fas fa-sign-in-alt me-2"></i><span >Log Out</span>
+											</a>
+											
+										{% else %}
+										<a href="{% url 'login' %}" 		>
+										
+											<i class="fas fa-sign-in-alt me-2"></i><span class="dn-lg">Log In</span>
+										</a>
+										{% endif %}
+									</a>
+									
+								</li>
+								<li class="add-listing">
+									<a href="https://www.flaticon.com/free-icons/notification" title="Notification icons">
+										<img src="{% static 'assets/images/notification.png' %}" alt="Notification Icon" class="icon-size" />
+										
 									</a>
 								</li>
+								
 							</ul>
 						</div>
 					</nav>
@@ -195,10 +225,10 @@
 			<div class="image-cover hero_banner" style="background:url({% static 'assets/img/Book_backgroungimage.jpg' %}) no-repeat;" data-overlay="4">
 				<div class="container">
 					
-					<h1 class="big-header-capt mb-0">Search Your Next Home</h1>
-					<p class="text-center">Find new & featured property located in your local city.</p>
+					<!-- <h1 class="big-header-capt mb-0">Search Your Next Home</h1>
+					<p class="text-center">Find new & featured property located in your local city.</p> -->
 					<!-- Type -->
-					<div class="row justify-content-center mt-5">
+					<!-- <div class="row justify-content-center mt-5">
 						<div class="col-xl-10 col-lg-11 col-md-12">
 							<div class="full_search_box nexio_search lightanic_search hero_search-radius modern">
 								<div class="search_hero_wrapping">
@@ -265,7 +295,7 @@
 							</div>
 							
 						</div>
-					</div>
+					</div> -->
 				</div>
 			</div>
 			<!-- ============================ Hero Banner End ================================== -->
@@ -294,6 +324,7 @@
 														<i class="fas fa-star text-warning"></i>
 													</div>
 													<div class="explio mt-1">
+														<p class="m-0 text-muted">Total issues books</p>
 														<p class="m-0 text-muted">3612 Reviews Total</p>
 													</div>
 												</div>
@@ -316,7 +347,7 @@
 														<i class="fas fa-star text-warning"></i>
 													</div>
 													<div class="explio mt-1">
-														<p class="m-0 text-muted">4589 Reviews Total</p>
+														<p class="m-0 text-muted">users</p>
 													</div>
 												</div>
 											</div>
@@ -338,7 +369,7 @@
 														<i class="fas fa-star text-warning"></i>
 													</div>
 													<div class="explio mt-1">
-														<p class="m-0 text-muted">3625 Reviews Total</p>
+														<p class="m-0 text-muted"> Chat forum</p>
 													</div>
 												</div>
 											</div>
@@ -369,7 +400,7 @@
 					<div class="row justify-content-center mt-4">
 					
 						<!-- Single Category -->
-						<div class="col-lg-3 col-md-4 col-sm-6">
+						<!-- <div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
 								<a href="list-layout-with-sidebar.html">
 									<div class="_category_elio">
@@ -385,7 +416,7 @@
 							</div>
 						</div>
 						
-						<!-- Single Category -->
+						
 						<div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
 								<a href="list-layout-with-sidebar.html">
@@ -402,7 +433,7 @@
 							</div>
 						</div>
 						
-						<!-- Single Category -->
+						
 						<div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
 								<a href="list-layout-with-sidebar.html">
@@ -419,7 +450,7 @@
 							</div>
 						</div>
 						
-						<!-- Single Category -->
+						
 						<div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
 								<a href="list-layout-with-sidebar.html">
@@ -435,7 +466,7 @@
 								</a>
 							</div>
 						</div>
-						
+						 -->
 						<!-- Single Category -->
 						<div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
@@ -445,8 +476,8 @@
 											<i class="fa-solid fa-house-fire text-seegreen"></i>
 										</div>
 										<div class="_category_caption">
-											<h5>Home & Villas</h5>
-											<span>22 Properties</span>
+											<h5>Tags</h5>
+											<span>{{ tag_count }} Properties</span> <!-- Dynamic count for Tags -->
 										</div>
 									</div>
 								</a>
@@ -462,8 +493,8 @@
 											<i class="fa-solid fa-igloo text-danger"></i>
 										</div>
 										<div class="_category_caption">
-											<h5>Garages</h5>
-											<span>22 Properties</span>
+											<h5>Authors</h5>
+											<span>{{ author_count }} Properties</span> <!-- Dynamic count for Authors -->
 										</div>
 									</div>
 								</a>
@@ -473,14 +504,15 @@
 						<!-- Single Category -->
 						<div class="col-lg-3 col-md-4 col-sm-6">
 							<div class="_category_box">
-								<a href="list-layout-with-sidebar.html">
+								<a href="{% url 'book_list' %}">
 									<div class="_category_elio">
 										<div class="_category_thumb">
 											<i class="fa-solid fa-house-laptop text-primary"></i>
 										</div>
 										<div class="_category_caption">
-											<h5>Office & Studio</h5>
-											<span>72 Properties</span>
+											<h5>Books</h5>
+											<span>{{ book_count }} </span> <!-- Dynamic count for Books -->
+										
 										</div>
 									</div>
 								</a>
@@ -496,13 +528,14 @@
 											<i class="fa-solid fa-building-circle-check text-orange"></i>
 										</div>
 										<div class="_category_caption">
-											<h5>Apartment</h5>
-											<span>102 Properties</span>
+											<h5>Genre</h5>
+											<span>{{ genre_count }} Properties</span> <!-- Dynamic count for Genres -->
 										</div>
 									</div>
 								</a>
 							</div>
 						</div>
+						
 						
 					</div>	
 					

@@ -49,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.OneToOneField("Address", on_delete=models.SET_NULL, null=True, blank=True)
     notifications_preferences = models.BooleanField(default=False)
+    gender = models.CharField(max_length=15, blank=True, null=True)
     role = models.CharField(
         max_length=50,
         choices=[
@@ -61,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    status=models.BooleanField(default=False)
 
     # Custom manager
     objects = UserManager()
@@ -105,6 +107,7 @@ class Subscription(models.Model):
     book_reservation_count = models.IntegerField(default=0, help_text="Number of books a user can reserve")
     issue_book_count = models.IntegerField(default=0, help_text="Number of books a user can issue at a time")
     external_library_access = models.BooleanField(default=False, help_text="Whether the subscription includes external library access")
+    status=models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.plan_name} Plan"

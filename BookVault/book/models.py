@@ -5,6 +5,8 @@ class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     bio = models.TextField(blank=True, null=True)  # Optional field for bio
+    status=models.BooleanField(default=False)
+
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -12,6 +14,8 @@ class Author(models.Model):
 # Model for Genre
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    status=models.BooleanField(default=False)
+
 
 
     def __str__(self):
@@ -43,6 +47,8 @@ class Book(models.Model):
         default='available'
     )
     related_titles = models.ManyToManyField('self', blank=True, symmetrical=False)
+    status=models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.title
@@ -50,6 +56,8 @@ class Book(models.Model):
 # Model for Tags (used for tagging books with keywords)
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    status=models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.name

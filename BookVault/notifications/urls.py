@@ -7,5 +7,5 @@ urlpatterns = [
     path('subscriptions/success/', views.subscription_success, name='subscription_success'),
     path("subscriptions/<int:subscription_id>/subscribe/", views.subscribe_to_plan, name="subscribe_to_plan"),
 
-    path("error/", views.error_page, name="error_page"),
+   
 ]

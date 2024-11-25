@@ -2,12 +2,31 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from datetime import datetime, timedelta
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+import qrcode
+from io import BytesIO
+
+from book.models import Author,Genre,Book,Tag
 from .models import User, Address, MemberProfile, Subscription
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home(request):
-    return render(request, 'client/index.html')
+    # Get the total number of entries in each model with status=True
+    author_count = Author.objects.filter(status=True).count()
+    genre_count = Genre.objects.filter(status=True).count()
+    book_count = Book.objects.filter(status=False).count()
+    tag_count = Tag.objects.filter(status=True).count()
+
+    # Prepare the context to pass to the template
+    context = {
+        'author_count': author_count,
+        'genre_count': genre_count,
+        'book_count': book_count,
+        'tag_count': tag_count,
+    }
+
+    return render(request, 'client/index.html', context)
 def add_subscription(request):
     if request.method == "POST":
         plan_name = request.POST.get("plan_name")
@@ -45,6 +64,7 @@ def register_librarian(request):
         city = request.POST.get("city")
         state = request.POST.get("state")
         country = request.POST.get("country")
+        gender = request.POST.get("gender")
         postal_code = request.POST.get("postal_code")
         password = request.POST.get("password")
         notifications_preferences = request.POST.get("iAgree") == "on"  # Checkbox value
@@ -87,6 +107,7 @@ def register_membercategory(request):
         city = request.POST.get("city")
         state = request.POST.get("state")
         country = request.POST.get("country")
+        gender = request.POST.get("gender")
         postal_code = request.POST.get("postal_code")
         membership_type = request.POST.get("membership_type")
         notifications_preferences = request.POST.get("iAgree") == "on"  # Checkbox value
@@ -118,6 +139,7 @@ def register_membercategory(request):
             password=password,
             phone=phone,
             address=address,
+            gender=gender,
             role="Member",
             notifications_preferences=notifications_preferences,
         )
@@ -131,8 +153,9 @@ def register_membercategory(request):
             membership_type=membership_type,
             # membership_expiry=membership_expiry,
         )
-
-        return HttpResponse("Member registered successfully!")
+       
+        # return HttpResponse("Member registered successfully!")
+        return redirect('login')
     return render(request, 'client/register_membercategory.html')
 
 
@@ -154,7 +177,7 @@ def user_login(request):
             elif user.role == 'Librarian':
                 return redirect('librarian_dashboard')  # Replace with your Librarian dashboard URL
             elif user.role == 'Member':
-                return redirect('member_dashboard')  # Replace with your Member dashboard URL
+                return redirect('home')  # Replace with your Member dashboard URL
             else:
                 return redirect('home')  # Default fallback
         else:
@@ -176,6 +199,37 @@ def member_dashboard(request):
 
 def admindashboard(request):
     return render(request, 'admin/index.html')
+def custom_logout(request):
+    # Log out the user
+    logout(request)
+    
+    # Redirect to the desired URL
+    return redirect('http://127.0.0.1:8000/')
+
+@login_required
+def profile_view(request):
+    # Fetch the logged-in user and their profile
+    user = request.user  # Automatically gets the current logged-in user
+    member_profile = MemberProfile.objects.get(user=user)  # Get associated profile
+
+    # Pass data to template
+    return render(request, "client/profile.html", {
+        'user': user,
+        'member_profile': member_profile,
+    })
 
 
+def generate_qr_code(request):
+    user = request.user  # Assuming you're using the logged-in user
+    user_data = f"Name: {user.name}\nEmail: {user.email}\nPhone: {user.phone}\nAddress: {user.address}\nGender: {user.gender}\nRole: {user.role}"
 
+    # Generate QR code from user data
+    qr = qrcode.make(user_data)
+    
+    # Create a BytesIO stream to save the QR code image in memory
+    qr_image = BytesIO()
+    qr.save(qr_image, 'PNG')
+    qr_image.seek(0)
+    
+    # Create an HTTP response with the QR code image
+    return HttpResponse(qr_image, content_type='image/png')

@@ -1,0 +1,172 @@
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container {
+        width: 80%;
+        max-width: 1200px;
+        background-color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 30px;
+    }
+
+    h2, h3 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    p {
+        color: #555;
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    .section {
+        margin-bottom: 30px;
+    }
+
+    .card {
+        width: 100%;
+        background: linear-gradient(145deg, #3b9d7e, #56b78f);
+        color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .card-left {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .card-left h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+    }
+
+    .card-left p {
+        margin: 5px 0;
+        font-size: 16px;
+    }
+
+    .card-right {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .membership-type {
+        background-color: #f9f9f9;
+        color: #333;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .membership-card {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .membership-card p {
+        font-size: 16px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #56b78f;
+        color: #fff;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-top: 10px;
+    }
+
+    .btn:hover {
+        background-color: #3b9d7e;
+    }
+</style>
+
+<div class="container">
+    <h2>Profile of {{ user.name }}</h2>
+
+    <!-- User Information Section -->
+    <div class="section">
+        <h3>User Information</h3>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ user.phone }}</p>
+        <p><strong>Address:</strong> {{ user.address }}</p>
+        <p><strong>Gender:</strong> {{ user.gender }}</p>
+        <p><strong>Role:</strong> {{ user.role }}</p>
+        <p><strong>Status:</strong> {% if user.status %} Active {% else %} Inactive {% endif %}</p>
+    </div>
+
+    <!-- Member Profile Section -->
+    <div class="section">
+        <h3>Member Profile</h3>
+        <p><strong>Membership Type:</strong> {{ member_profile.membership_type }}</p>
+        <p><strong>Membership Expiry:</strong> {{ member_profile.membership_expiry }}</p>
+        <p><strong>Borrowing Limit:</strong> {{ member_profile.borrowing_limit }}</p>
+        <p><strong>Outstanding Fines:</strong> ${{ member_profile.outstanding_fines }}</p>
+        <p><strong>Reserved Books Count:</strong> {{ member_profile.reserved_books_count }}</p>
+        <p><strong>Favorite Genres:</strong> {{ member_profile.favorite_genres }}</p>
+
+        <p><strong>Subscription:</strong>
+            {% if member_profile.subscription %}
+                {{ member_profile.subscription }}
+            {% else %}
+                <a href="{% url 'list_subscriptions' %}" class="btn">No subscription. Click here to view available subscriptions.</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Membership Card Section -->
+    <div class="section">
+        <h3>Membership Card</h3>
+        <div class="membership-card">
+            <p><strong>Membership ID:</strong> {{ member_profile.id }}</p>
+            <p><strong>Member Since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+            <p><strong>Expiry Date:</strong> {{ member_profile.membership_expiry|date:"F j, Y" }}</p>
+            {% if member_profile.membership_type %}
+                <p><strong>Membership Type:</strong> {{ member_profile.membership_type }}</p>
+            {% endif %}
+
+            <!-- Membership Card Design -->
+            <div class="card">
+                <div class="card">
+                    <h2>{{ user.name }}</h2>
+                    <p>Membership ID: {{ member_profile.id }}</p>
+                    <p>Type: <span class="membership-type">{{ member_profile.membership_type }}</span></p>
+                    <p>Expires: {{ member_profile.membership_expiry|date:"m/d/Y" }}</p>
+                </div>
+                <div class="section">
+                    <h3>Membership QR Code</h3>
+                    <p>Scan the QR code below to access your membership details:</p>
+                    <img src="{% url 'generate_qr_code' %}" alt="Membership QR Code">
+                </div>
+                    
+          
+            </div>
+        </div>
+    </div>
+</div>
