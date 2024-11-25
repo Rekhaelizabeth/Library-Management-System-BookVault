@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 import qrcode
 from io import BytesIO
 
 from book.models import Author,Genre,Book,Tag
-from .models import User, Address, MemberProfile, Subscription
+from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -198,7 +198,7 @@ def member_dashboard(request):
     return render(request, 'client/member_dashboard.html')
 
 def admindashboard(request):
-    return render(request, 'admin/index.html')
+    return render(request, 'admindashboard/index.html')
 def custom_logout(request):
     # Log out the user
     logout(request)
@@ -207,21 +207,56 @@ def custom_logout(request):
     return redirect('http://127.0.0.1:8000/')
 
 @login_required
-def profile_view(request):
+def profile(request):
     # Fetch the logged-in user and their profile
     user = request.user  # Automatically gets the current logged-in user
     member_profile = MemberProfile.objects.get(user=user)  # Get associated profile
+    address = user.address  # Assuming the address is a related model to user
 
     # Pass data to template
     return render(request, "client/profile.html", {
         'user': user,
         'member_profile': member_profile,
+        'address': address,  # Include the address object
     })
-
 
 def generate_qr_code(request):
     user = request.user  # Assuming you're using the logged-in user
-    user_data = f"Name: {user.name}\nEmail: {user.email}\nPhone: {user.phone}\nAddress: {user.address}\nGender: {user.gender}\nRole: {user.role}"
+    # Fetch related models
+    address = user.address  # Address of the user
+    member_profile = MemberProfile.objects.get(user=user)  # MemberProfile of the user
+    subscription = member_profile.subscription  # Subscription of the user (if exists)
+
+    # Format the user data into a string
+    user_data = f"""
+    Name: {user.name}
+    Email: {user.email}
+    Phone: {user.phone}
+    Gender: {user.gender}
+    Role: {user.role}
+    Status: {'Active' if user.is_active else 'Inactive'}
+    Date Joined: {user.date_joined.strftime('%F')}
+    
+    Address:
+    Street: {address.addressline}
+    City: {address.city}
+    State: {address.state}
+    Country: {address.country}
+    Postal Code: {address.postal_code}
+    
+    Membership:
+    Membership Type: {member_profile.membership_type}
+    Expiry Date: {member_profile.membership_expiry.strftime('%F')}
+    Borrowing Limit: {member_profile.borrowing_limit}
+    Outstanding Fines: ${member_profile.outstanding_fines}
+    Reserved Books Count: {member_profile.reserved_books_count}
+    
+    Subscription:
+    Plan Name: {subscription.plan_name if subscription else 'None'}
+    Price: ${subscription.price if subscription else 'N/A'}
+    Period: {subscription.time_period if subscription else 'N/A'} days
+    External Library Access: {'Yes' if subscription.external_library_access else 'No'}
+    """
 
     # Generate QR code from user data
     qr = qrcode.make(user_data)
@@ -233,3 +268,77 @@ def generate_qr_code(request):
     
     # Create an HTTP response with the QR code image
     return HttpResponse(qr_image, content_type='image/png')
+
+def borrow_book(request, book_id):
+    try:
+        # Fetch the book by its ID
+        book = get_object_or_404(Book, id=book_id)
+        
+        # Assuming you have a current user and that user can borrow books
+        user = request.user
+        
+        # Fetch the MemberProfile for the current user
+        member_profile = get_object_or_404(MemberProfile, user=user)
+        
+        # Get the borrowing limit for that user
+        borrowing_limit = member_profile.borrowing_limit
+        return_date = timezone.now() + timedelta(days=borrowing_limit)
+        
+        # Check if there are available copies of the book
+        if book.available_copies > 0:
+            # Create an issue transaction
+            transaction = BookIssueTransaction.objects.create(
+                book=book,
+                user=user,
+                issue_date=timezone.now(),  # Automatically set issue_date
+                return_date=return_date
+            )
+            
+            # Reduce the available copies by 1
+            print("hai")
+            print(book.available_copies)
+            book.available_copies -= 1
+            print(book.available_copies)
+
+            
+            
+            # Optionally, you can set the book status to "checked out"
+            book.availability = 'checked_out'
+            book.save()
+
+            print("Book issued successfully.")
+        else:
+            print("No available copies left.")
+    
+    except Exception as e:
+        print(f"Error: {e}")
+    
+    return redirect('book_list')  # Redirect to the book list or another page
+
+def reserve_book(request, book_id):
+    # Fetch the book instance
+    book = get_object_or_404(Book, id=book_id)
+
+    # Check if the book is reservable
+    if book.available_copies == 0 and book.reserved_copies < book.total_copies:
+        # Create a reservation entry
+        reservation, created = BookReservation.objects.get_or_create(
+            book=book,
+            user=request.user,  # The currently logged-in user
+            defaults={'status': 'pending'}
+        )
+
+        if created:
+            # Increment the reserved copies count in the Book model
+            book.reserved_copies += 1
+            book.save()
+            member_profile = MemberProfile.objects.all()
+            print(member_profile) 
+            print("Done")
+            messages.success(request, f"Book '{book.title}' has been reserved successfully!")
+        else:
+            messages.info(request, f"You have already reserved the book '{book.title}'.")
+    else:
+        messages.error(request, f"The book '{book.title}' cannot be reserved at the moment.")
+
+    return redirect('book_list')  # Redirect to the book list page

@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from book.models import Genre
+from book.models import Genre,Book
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 
 # Create your models here.
@@ -145,4 +147,41 @@ class MemberProfile(models.Model):
         return f"Member: {self.user.name}"
     
 
+class BookIssueTransaction(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    issue_date = models.DateField(default=timezone.now)
+    return_date = models.DateField(null=True, blank=True)
+    returnExtensionDate = models.IntegerField(null=True)
+    penalties = models.FloatField(default=0.0)
 
+
+    due_date = models.DateField(default=timezone.now() + timedelta(days=14))  # Assuming 2-week loan period
+    status_choices = [
+        ('ISSUED', 'Issued'),
+        ('RETURNED', 'Returned'),
+        ('LOST', 'Issued'),
+        ('DAMAGED', 'Damaged'),
+    ]
+    status = models.CharField(max_length=10, choices=status_choices, default='ISSUED')
+
+    def str(self):
+        return f"Book: {self.book.title}, Issued to: {self.user.username}, Due: {self.due_date}"
+    
+class BookReservation(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('canceled', 'Canceled'),
+    ]
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # User who is reserving the book
+    reserved_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    def str(self):
+        return f"Reservation by {self.user.username} for {self.book.title}"
+
+    class Meta:
+        unique_together = ('book', 'user')  # Ensures a user can reserve a specific book only once

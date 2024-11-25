@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Books</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong><br>
+                ISBN: {{ book.isbn }}<br>
+                Author: {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                Publisher: {{ book.publisher }}<br>
+                Publication Year: {{ book.publication_year }}<br>
+                Edition: {{ book.edition }}<br>
+                Language: {{ book.language }}<br>
+                Genre: {{ book.genre.name }}<br>
+                Availability: {{ book.get_availability_display }}<br>
+                Status: {% if book.status %}Available{% else %}Not Available{% endif %}<br>
+                Total Copies: {{ book.total_copies }}<br>
+                Available Copies: {{ book.available_copies }}<br>
+                Reserved Copies: {{ book.reserved_copies }}<br>
+                Description: {{ book.description }}<br>
+                
+                <!-- Display Cover Image if exists -->
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="Cover Image of {{ book.title }}" width="100" />
+                {% endif %}
+
+                <p>{{ book.description }}</p>
+
+                {% if book.available_copies > 0 %}
+                    <!-- Show Borrow link if there are available copies -->
+                    <a href="{% url 'borrow_book' book.id %}">Borrow this book</a>
+                {% else %}
+                    <!-- Show Reserve link if no copies are available -->
+                    <a href="{% url 'reserve_book' book.id %}">Reserve this book</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

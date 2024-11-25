@@ -16,6 +16,6 @@ class SubscriptionLog(models.Model):
     )
     payment_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay Payment ID
 
-    def __str__(self):
+    def str(self):
         return f"{self.member.user.name} - {self.subscription.plan_name}"
 

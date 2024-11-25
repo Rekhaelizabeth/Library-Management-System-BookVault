@@ -22,6 +22,17 @@ class Genre(models.Model):
         return self.name
 
 # Model for Book
+
+
+# Model for Tags (used for tagging books with keywords)
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    status=models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return self.name
+    
 class Book(models.Model):
     AVAILABILITY_CHOICES = [
         ('available', 'Available'),
@@ -48,16 +59,10 @@ class Book(models.Model):
     )
     related_titles = models.ManyToManyField('self', blank=True, symmetrical=False)
     status=models.BooleanField(default=False)
+    total_copies = models.IntegerField(default=1)  # Total number of copies available in the library
+    available_copies = models.IntegerField(default=1)  # Number of copies currently available for issue
+    reserved_copies = models.IntegerField(default=0)
 
 
-    def __str__(self):
+    def str(self):
         return self.title
-
-# Model for Tags (used for tagging books with keywords)
-class Tag(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    status=models.BooleanField(default=False)
-
-
-    def __str__(self):
-        return self.name
