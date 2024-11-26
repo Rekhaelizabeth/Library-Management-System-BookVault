@@ -3,7 +3,7 @@
 {% block title %}Books Page{% endblock %}
 
 {% block content %}
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Book Dashboard
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">    Genre Dashboard
 </h1>
 
                         <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
@@ -23,8 +23,8 @@
                     </div>
                     <!-- Right Content -->
                     <div class="p-2 border rounded bg-light">
-                        <a href="{% url 'add_book' %}" class="btn btn-primary btn-block">
-                            Add Book
+                        <a href="{% url 'add_genre' %}" class="btn btn-primary btn-block">
+                            Add Genre
                         </a>
                     </div>
                 </div>
@@ -130,27 +130,29 @@
                      
                         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-                        <div class="container mt-4">
-                            <h2 class="mb-4">Books List</h2>
-                            <div class="row">
-                                {% for book in books %}
-                                <div class="col-md-4 mb-4">
-                                    <div class="card h-100">
-                                        {% comment %} <img src="{{ book.cover_image.url }}" class="card-img-top" alt="Cover image" style="height: 200px; object-fit: cover;"> {% endcomment %}
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ book.title }}</h5>
-                                            <p class="card-text">
-                                                <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
-                                                <strong>Genre:</strong> {{ book.genre.name }}<br>
-                                                <strong>Availability:</strong> {{ book.get_availability_display }}<br>
-                                            </p>
-                                            <p class="card-text">{{ book.description|truncatewords:20 }}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                        <h1 class="mb-4">Genre List</h1>
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for genre in genres %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ genre.name }}</td>
+                                        <td>{{ genre.status|yesno:"Active,Inactive" }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="3" class="text-center">No genres found.</td>
+                                    </tr>
                                 {% endfor %}
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
                         
 
 

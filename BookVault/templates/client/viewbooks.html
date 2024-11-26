@@ -93,6 +93,18 @@
                                     <span class="text-danger">Not Available</span>
                                 {% endif %}
                             </p>
+                            <div class="text-center mt-3">
+                                <div class="d-inline-block border p-3 rounded bg-light">
+                                    <img 
+                                        src="data:image/png;base64,{{ book.barcode }}" 
+                                        alt="Barcode for {{ book.title }}" 
+                                        class="img-fluid" 
+                                        style="max-height: 150px; width: auto; display: block; margin: 0 auto;">
+                                    <p class="mt-2 text-muted small">
+                                    </p>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="card-footer text-center">
                             {% if book.available_copies > 0 %}

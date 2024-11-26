@@ -5,12 +5,14 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 import qrcode
 from io import BytesIO
-
 from book.models import Author,Genre,Book,Tag
 from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
+def baseindex(request):
+    return render(request, 'admindasboard/baseindex.html')
+
 def home(request):
     # Get the total number of entries in each model with status=True
     author_count = Author.objects.filter(status=True).count()

@@ -4,6 +4,12 @@ from usermanagement.models import BookIssueTransaction
 from .models import Book
 from .models import Author, Genre, Book, Tag
 from django.contrib import messages
+from barcode import Code128
+from barcode.writer import ImageWriter
+from io import BytesIO
+import base64
+from django.forms.models import model_to_dict
+
 
 def book_list(request):
     books = Book.objects.all()
@@ -97,6 +103,15 @@ def inventory(request):
     return render(request, 'book/inventory.html')
 
 
+def generate_barcode(data):
+    print(data)
+    buffer = BytesIO()
+    writer = ImageWriter()
+    sanitized_data = "".join(c if c.isalnum() or c in " |:,-" else "_" for c in data)  # Clean up data
+    Code128(sanitized_data, writer=writer).write(buffer, options={"write_text": False})
+    # print(base64.b64encode(buffer.getvalue()).decode('utf-8'))
+    return base64.b64encode(buffer.getvalue()).decode('utf-8')
+
 def viewbooks(request):
     query = request.GET.get('q', '')  # Search query
     availability = request.GET.get('availability', '')  # Availability filter
@@ -126,6 +141,10 @@ def viewbooks(request):
         books = books.filter(publication_year=year)
     if language:
         books = books.filter(language__iexact=language)
+    for book in books:
+        barcode_data = f"Book: {book.id}, Available copies:{book.available_copies}"
+        book.barcode = generate_barcode(barcode_data)
+  
 
     # Pass filters and books to the template
     genres = Genre.objects.all()
