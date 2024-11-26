@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'analytics',
     'book',
     'jazzmin',
+    
 ]
 
 MIDDLEWARE = [

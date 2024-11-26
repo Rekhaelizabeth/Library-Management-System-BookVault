@@ -3,43 +3,115 @@
 <html>
 <head>
     <title>Book List</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Books</h1>
-    <ul>
-        {% for book in books %}
-            <li>
-                <strong>{{ book.title }}</strong><br>
-                ISBN: {{ book.isbn }}<br>
-                Author: {{ book.author.first_name }} {{ book.author.last_name }}<br>
-                Publisher: {{ book.publisher }}<br>
-                Publication Year: {{ book.publication_year }}<br>
-                Edition: {{ book.edition }}<br>
-                Language: {{ book.language }}<br>
-                Genre: {{ book.genre.name }}<br>
-                Availability: {{ book.get_availability_display }}<br>
-                Status: {% if book.status %}Available{% else %}Not Available{% endif %}<br>
-                Total Copies: {{ book.total_copies }}<br>
-                Available Copies: {{ book.available_copies }}<br>
-                Reserved Copies: {{ book.reserved_copies }}<br>
-                Description: {{ book.description }}<br>
-                
-                <!-- Display Cover Image if exists -->
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" alt="Cover Image of {{ book.title }}" width="100" />
-                {% endif %}
+    <div class="container py-5">
+        <h1 class="text-center mb-4">Books</h1>
 
-                <p>{{ book.description }}</p>
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'viewbooks' %}" class="mb-4">
+            <div class="row g-3">
+                <!-- Search Input -->
+                <div class="col-md-4">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        class="form-control" 
+                        placeholder="Search by Title, Author, ISBN, or Tags" 
+                        value="{{ query|default:'' }}">
+                </div>
+        
+                <!-- Availability Filter -->
+                <div class="col-md-2">
+                    <select name="availability" class="form-select">
+                        <option value="" {% if not availability %}selected{% endif %}>All Availability</option>
+                        <option value="available" {% if availability == 'available' %}selected{% endif %}>Available</option>
+                        <option value="not_available" {% if availability == 'not_available' %}selected{% endif %}>Not Available</option>
+                    </select>
+                </div>
+        
+                <!-- Genre Filter -->
+                <div class="col-md-2">
+                    <select name="genre" class="form-select">
+                        <option value="" {% if not genre %}selected{% endif %}>All Genres</option>
+                        {% for g in genres %}
+                            <option value="{{ g.id }}" {% if genre == g.id|stringformat:"s" %}selected{% endif %}>{{ g.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <!-- Year Filter -->
+                <div class="col-md-2">
+                    <input 
+                        type="number" 
+                        name="year" 
+                        class="form-control" 
+                        placeholder="Year" 
+                        value="{{ year|default:'' }}">
+                </div>
+        
+                <!-- Language Filter -->
+                <div class="col-md-2">
+                    <input 
+                        type="text" 
+                        name="language" 
+                        class="form-control" 
+                        placeholder="Language" 
+                        value="{{ language|default:'' }}">
+                </div>
+            </div>
+        
+            <!-- Submit Button -->
+            <div class="text-end mt-3">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+        
+        <!-- Display Book Cards -->
+        <div class="row g-4">
+            {% for book in books %}
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="Cover Image of {{ book.title }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'images/placeholder.png' %}" alt="No Cover Image Available" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ book.title }}</h5>
+                            <p class="card-text">
+                                <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                                <strong>Publisher:</strong> {{ book.publisher }}<br>
+                                <strong>Year:</strong> {{ book.publication_year }}<br>
+                                <strong>Genre:</strong> {{ book.genre.name }}<br>
+                                <strong>Status:</strong> 
+                                {% if book.status %}
+                                    <span class="text-success">Available</span>
+                                {% else %}
+                                    <span class="text-danger">Not Available</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="card-footer text-center">
+                            {% if book.available_copies > 0 %}
+                                <a href="{% url 'borrow_book' book.id %}" class="btn btn-primary btn-sm">Borrow</a>
+                            {% else %}
+                                <a href="{% url 'reserve_book' book.id %}" class="btn btn-warning btn-sm">Reserve</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
-                {% if book.available_copies > 0 %}
-                    <!-- Show Borrow link if there are available copies -->
-                    <a href="{% url 'borrow_book' book.id %}">Borrow this book</a>
-                {% else %}
-                    <!-- Show Reserve link if no copies are available -->
-                    <a href="{% url 'reserve_book' book.id %}">Reserve this book</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+        {% if not books %}
+            <p class="text-center text-muted">No books found matching your query.</p>
+        {% endif %}
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

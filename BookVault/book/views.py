@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-
+from django.db.models import Q
 from usermanagement.models import BookIssueTransaction
 from .models import Book
 from .models import Author, Genre, Book, Tag
@@ -98,8 +98,48 @@ def inventory(request):
 
 
 def viewbooks(request):
-    books = Book.objects.all()
-    return render(request, 'client/viewbooks.html', {'books': books})
+    query = request.GET.get('q', '')  # Search query
+    availability = request.GET.get('availability', '')  # Availability filter
+    genre = request.GET.get('genre', '')  # Genre filter
+    year = request.GET.get('year', '')  # Year filter
+    language = request.GET.get('language', '')  # Language filter
+
+    books = Book.objects.all()  # Default: fetch all books
+
+    # Apply search query
+    if query:
+        books = books.filter(
+            Q(title__icontains=query) |
+            Q(author__first_name__icontains=query) |
+            Q(author__last_name__icontains=query) |
+            Q(isbn__icontains=query) |
+            Q(tags__name__icontains=query) |
+            Q(description__icontains=query)
+        ).distinct()
+
+    # Apply filters
+    if availability:
+        books = books.filter(status=(availability == 'available'))
+    if genre:
+        books = books.filter(genre__id=genre)
+    if year:
+        books = books.filter(publication_year=year)
+    if language:
+        books = books.filter(language__iexact=language)
+
+    # Pass filters and books to the template
+    genres = Genre.objects.all()
+    return render(request, 'client/viewbooks.html', {
+        'books': books,
+        'query': query,
+        'availability': availability,
+        'genre': genre,
+        'year': year,
+        'language': language,
+        'genres': genres,
+    })
+
+
 def book_transaction_list(request):
     # Fetch all BookIssueTransaction entries
     transactions = BookIssueTransaction.objects.filter(user=request.user)
