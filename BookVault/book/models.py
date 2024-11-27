@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Model for Author (if you plan to store authors separately)
 class Author(models.Model):
     first_name = models.CharField(max_length=100)
@@ -66,3 +67,5 @@ class Book(models.Model):
 
     def str(self):
         return self.title
+
+

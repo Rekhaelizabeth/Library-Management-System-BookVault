@@ -80,7 +80,7 @@
                             <img src="{% static 'images/placeholder.png' %}" alt="No Cover Image Available" class="card-img-top" style="height: 250px; object-fit: cover;">
                         {% endif %}
                         <div class="card-body">
-                            <h5 class="card-title text-primary">{{ book.title }}</h5>
+                            <h5><a href="{% url 'book_description' book.id %}">{{ book.title }}</a></h5>
                             <p class="card-text">
                                 <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
                                 <strong>Publisher:</strong> {{ book.publisher }}<br>
@@ -107,12 +107,17 @@
                             
                         </div>
                         <div class="card-footer text-center">
-                            {% if book.available_copies > 0 %}
-                                <a href="{% url 'borrow_book' book.id %}" class="btn btn-primary btn-sm">Borrow</a>
+                            {% if has_subscription %}
+                                {% if book.available_copies > 0 %}
+                                    <a href="{% url 'borrow_book' book.id %}" class="btn btn-primary btn-sm">Borrow</a>
+                                {% else %}
+                                    <a href="{% url 'reserve_book' book.id %}" class="btn btn-warning btn-sm">Reserve</a>
+                                {% endif %}
                             {% else %}
-                                <a href="{% url 'reserve_book' book.id %}" class="btn btn-warning btn-sm">Reserve</a>
+                                <p class="text-muted">You need an active subscription to borrow or reserve books.</p>
                             {% endif %}
                         </div>
+                        
                     </div>
                 </div>
             {% endfor %}

@@ -185,3 +185,14 @@ class BookReservation(models.Model):
 
     class Meta:
         unique_together = ('book', 'user')  # Ensures a user can reserve a specific book only once
+
+
+class Reviews(models.Model):
+    book = models.ForeignKey(Book,on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField()  # Rating from 1-5
+    review_text = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.book.title}"

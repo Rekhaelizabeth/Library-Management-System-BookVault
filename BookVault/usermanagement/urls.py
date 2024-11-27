@@ -18,5 +18,7 @@ urlpatterns = [
     path('generate_qr_code/', views.generate_qr_code, name='generate_qr_code'),
     path('borrow/<int:book_id>/', views.borrow_book, name='borrow_book'),
     path('reserve/<int:book_id>/', views.reserve_book, name='reserve_book'),
+    path('book/<int:book_id>/', views.book_description, name='book_description'),
+
     
 ]

@@ -1,6 +1,6 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
-from usermanagement.models import BookIssueTransaction
+from usermanagement.models import BookIssueTransaction, MemberProfile
 from .models import Book
 from .models import Author, Genre, Book, Tag
 from django.contrib import messages
@@ -9,11 +9,15 @@ from barcode.writer import ImageWriter
 from io import BytesIO
 import base64
 from django.forms.models import model_to_dict
+from .models import Book
+from django.contrib.auth.decorators import login_required
 
 
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'admindashboard/book_list.html', {'books': books})
+
+
 
 def add_tag(request):
     if request.method == 'POST':
@@ -144,7 +148,9 @@ def viewbooks(request):
     for book in books:
         barcode_data = f"Book: {book.id}, Available copies:{book.available_copies}"
         book.barcode = generate_barcode(barcode_data)
-  
+
+    member_profile = get_object_or_404(MemberProfile, user=request.user)
+    has_subscription = member_profile.subscription  # Assuming this field exists in MemberProfile
 
     # Pass filters and books to the template
     genres = Genre.objects.all()
@@ -156,6 +162,7 @@ def viewbooks(request):
         'year': year,
         'language': language,
         'genres': genres,
+        'has_subscription': has_subscription,
     })
 
 

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 import qrcode
 from io import BytesIO
 from book.models import Author,Genre,Book,Tag
-from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription
+from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription , Reviews
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -315,7 +315,7 @@ def borrow_book(request, book_id):
     except Exception as e:
         print(f"Error: {e}")
     
-    return redirect('book_list')  # Redirect to the book list or another page
+    return redirect('home')  # Redirect to the book list or another page
 
 def reserve_book(request, book_id):
     # Fetch the book instance
@@ -344,3 +344,39 @@ def reserve_book(request, book_id):
         messages.error(request, f"The book '{book.title}' cannot be reserved at the moment.")
 
     return redirect('book_list')  # Redirect to the book list page
+
+
+@login_required
+def book_description(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    user_has_borrowed = BookIssueTransaction.objects.filter(book=book, user=request.user).exists()
+
+    if request.method == "POST" and user_has_borrowed:
+        # Get the rating and review from the form
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review')
+
+        # Ensure the user has not already reviewed this book
+        existing_review = Reviews.objects.filter(book=book, user=request.user).first()
+        if existing_review:
+            messages.warning(request, "You have already reviewed this book.")
+        else:
+            # Save the review and rating
+            Reviews.objects.create(
+                book=book,
+                user=request.user,
+                rating=rating,
+                review_text=review_text
+            )
+            messages.success(request, "Your review has been submitted successfully.")
+
+        return redirect('book_description', book_id=book_id)
+
+    # Fetch all reviews for the book
+    reviews = Reviews.objects.filter(book=book).order_by('-created_at')
+
+    return render(request, 'client/bookdescription.html', {
+        'book': book,
+        'reviews': reviews,
+        'user_has_borrowed': user_has_borrowed,
+    })
