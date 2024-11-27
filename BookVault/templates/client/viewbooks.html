@@ -86,6 +86,8 @@
                                 <strong>Publisher:</strong> {{ book.publisher }}<br>
                                 <strong>Year:</strong> {{ book.publication_year }}<br>
                                 <strong>Genre:</strong> {{ book.genre.name }}<br>
+                                <strong>Available copies:</strong> {{ book.available_copies}}<br>
+
                                 <strong>Status:</strong> 
                                 {% if book.status %}
                                     <span class="text-success">Available</span>

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
-from usermanagement.models import BookIssueTransaction, MemberProfile
+from usermanagement.models import BookIssueTransaction, MemberProfile, User
 from .models import Book
 from .models import Author, Genre, Book, Tag
 from django.contrib import messages
@@ -11,12 +11,21 @@ import base64
 from django.forms.models import model_to_dict
 from .models import Book
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 def book_list(request):
-    books = Book.objects.all()
-    return render(request, 'admindashboard/book_list.html', {'books': books})
+    books = Book.objects.exclude(availability='removed')
+    return render(request, 'libriarian/book_list.html', {'books': books})
 
+def member_list(request):
+    user = User.objects.exclude(is_active=True)
+    return render(request, 'libriarian/member.html', {'users': user})
+
+def approve_member(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.is_active = True
+    return render(request, 'libriarian/member.html', {'users': user})
 
 
 def add_tag(request):
@@ -26,7 +35,7 @@ def add_tag(request):
             Tag.objects.create(name=name)
             messages.success(request, 'Tag added successfully!')
             return redirect('add_tag')
-    return render(request, 'admindashboard/add_tag.html')
+    return render(request, 'libriarian/add_tag.html')
 
 def add_genre(request):
     if request.method == 'POST':
@@ -35,7 +44,7 @@ def add_genre(request):
             Genre.objects.create(name=name)
             messages.success(request, 'Genre added successfully!')
             return redirect('add_genre')
-    return render(request, 'admindashboard/add_genre.html')
+    return render(request, 'libriarian/add_genre.html')
 
 def add_author(request):
     if request.method == 'POST':
@@ -46,7 +55,7 @@ def add_author(request):
             Author.objects.create(first_name=first_name, last_name=last_name, bio=bio)
             messages.success(request, 'Author added successfully!')
             return redirect('add_author')
-    return render(request, 'admindashboard/add_author.html')
+    return render(request, 'libriarian/add_author.html')
 
 def add_book(request):
     if request.method == "POST":
@@ -96,12 +105,59 @@ def add_book(request):
     genres = Genre.objects.all()
     tags = Tag.objects.all()
     books = Book.objects.all()
-    return render(request, 'admindashboard/add_book.html', {
+    return render(request, 'libriarian/add_book.html', {
         'authors': authors,
         'genres': genres,
         'tags': tags,
         'books': books,
     })
+
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == "POST":
+        # Update the book details
+        isbn = request.POST.get('isbn')
+        title = request.POST.get('title')
+        author_id = request.POST.get('author')  # Assuming author_id is passed
+        publisher = request.POST.get('publisher')
+        publication_year = request.POST.get('publication_year')
+        language = request.POST.get('language')
+        genre_id = request.POST.get('genre')  # Assuming genre_id is passed
+        description = request.POST.get('description')
+        total_copies = int(request.POST.get('total_copies', 1))
+        available_copies = book.total_copies  # Reset available copies
+
+        book.isbn = isbn
+        book.title = title
+        book.author_id = author_id  # Ensure this is a valid Author ID
+        book.publisher = publisher
+        book.publication_year = publication_year
+        book.language = language
+        book.genre_id = genre_id  # Ensure this is a valid Genre ID
+        book.description = description
+        book.total_copies = total_copies
+        book.available_copies = available_copies
+        
+        # Save the updated book instance
+        book.save()
+        return redirect('book_list')  # Redirect after editing
+    return render(request, 'libriarian/edit_book.html', {'book': book})
+
+def remove_book(request, book_id):
+    """
+    View to set a book's availability to 'Removed'.
+    """
+    book = get_object_or_404(Book, id=book_id)
+    
+    # Update the availability status
+    book.availability = 'removed'
+    book.save()
+    
+    # Redirect or return a response
+   
+    
+    # For non-AJAX requests, redirect to a book list or detail page
+    return redirect('book_list')  # Replace 'book_list' with the appropriate URL name
 
 def inventory(request):
     return render(request, 'book/inventory.html')
@@ -172,3 +228,16 @@ def book_transaction_list(request):
 
     # Pass the transactions to the template
     return render(request, 'client/book_transaction_list.html', {'transactions': transactions})
+
+def tag_list(request):
+    tags = Tag.objects.all()  # Retrieve all tags from the database
+    return render(request, 'libriarian/tag_list.html', {'tags': tags})
+
+def genre_list(request):
+    genres = Genre.objects.all()  # Fetch all genres from the database
+    return render(request, 'libriarian/genre_list.html', {'genres': genres})
+
+def author_list(request):
+    authors = Author.objects.all()  # Fetch all authors from the database
+    return render(request, 'libriarian/author_list.html', {'authors': authors})
+

@@ -69,7 +69,3 @@ def subscribe_to_plan(request, subscription_id):
 
     # Render the subscription selection page for GET requests
     return render(request, "member/subscribe_to_plan.html", {"subscription": subscription})
-
-
-
-

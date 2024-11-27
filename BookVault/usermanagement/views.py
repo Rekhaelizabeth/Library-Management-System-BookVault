@@ -13,6 +13,9 @@ from django.contrib.auth import authenticate, login, logout
 def baseindex(request):
     return render(request, 'admindasboard/baseindex.html')
 
+def librarianbaseindex(request):
+    return render(request, 'librairian/baseindex.html')
+
 def home(request):
     # Get the total number of entries in each model with status=True
     author_count = Author.objects.filter(status=True).count()
@@ -143,6 +146,7 @@ def register_membercategory(request):
             address=address,
             gender=gender,
             role="Member",
+            is_active=False,
             notifications_preferences=notifications_preferences,
         )
 
@@ -171,6 +175,10 @@ def user_login(request):
         user = authenticate(request, email=email, password=password)
 
         if user is not None:
+            if not user.is_active:
+                # User is not active; display a message
+                messages.error(request, "Your account is not approved by the librarian yet.")
+                return redirect('login')  # Redirect back to the login page
             login(request, user)
             
             # Redirect based on the user role
@@ -183,7 +191,7 @@ def user_login(request):
             else:
                 return redirect('home')  # Default fallback
         else:
-            messages.error(request, 'Invalid email or password')
+            messages.error(request, "Invalid email or password.")
             return redirect('login')  # Replace with the URL name of your login page
 
     return render(request, 'client/login.html')
@@ -194,7 +202,7 @@ def admin_dashboard(request):
     return render(request, 'client/admin_dashboard.html')
 
 def librarian_dashboard(request):
-    return render(request, 'client/librarian_dashboard.html')
+    return render(request, 'libriarian/index.html')
 
 def member_dashboard(request):
     return render(request, 'client/member_dashboard.html')
@@ -272,6 +280,7 @@ def generate_qr_code(request):
     return HttpResponse(qr_image, content_type='image/png')
 
 def borrow_book(request, book_id):
+    print("Haiiii")
     try:
         # Fetch the book by its ID
         book = get_object_or_404(Book, id=book_id)
@@ -285,7 +294,10 @@ def borrow_book(request, book_id):
         # Get the borrowing limit for that user
         borrowing_limit = member_profile.borrowing_limit
         return_date = timezone.now() + timedelta(days=borrowing_limit)
-        
+        print(borrowing_limit)
+        print("helloo")
+        print(book)
+        print(user)
         # Check if there are available copies of the book
         if book.available_copies > 0:
             # Create an issue transaction

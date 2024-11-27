@@ -1,9 +1,9 @@
-{% extends "admindashboard/baseindex.html" %}
+{% extends "libriarian/baseindex.html" %}
 
 {% block title %}Books Page{% endblock %}
 
 {% block content %}
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">  Author Dashboard
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Book Dashboard
 </h1>
 
                         <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
@@ -23,8 +23,8 @@
                     </div>
                     <!-- Right Content -->
                     <div class="p-2 border rounded bg-light">
-                        <a href="{% url 'add_author' %}" class="btn btn-primary btn-block">
-                            Add Author
+                        <a href="{% url 'add_book' %}" class="btn btn-primary btn-block">
+                            Add Book
                         </a>
                     </div>
                 </div>
@@ -130,33 +130,42 @@
                      
                         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-                        <h1 class="mb-4">Author List</h1>
-        <table class="table table-bordered">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Bio</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for author in authors %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ author.first_name }}</td>
-                        <td>{{ author.last_name }}</td>
-                        <td>{{ author.bio|default:"N/A" }}</td>
-                        <td>{{ author.status|yesno:"Active,Inactive" }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">No authors found.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        <div class="container mt-4">
+                            <h2 class="mb-4">Books List</h2>
+                            <div class="row">
+                                {% for book in books %}
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        {% comment %} <img src="{{ book.cover_image.url }}" class="card-img-top" alt="Cover image" style="height: 200px; object-fit: cover;"> {% endcomment %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ book.title }}</h5>
+                                            <p class="card-text">
+                                                <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                                                <strong>Genre:</strong> {{ book.genre.name }}<br>
+                                                <strong>Availability:</strong> {{ book.get_availability_display }}<br>
+                                            </p>
+                                            <p class="card-text">{{ book.description|truncatewords:20 }}</p>
+                                            <a href="{% url 'edit_book' book.id %}">Edit Book</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <h1>Edit Book</h1>
+                            <form method="post">
+                                {% csrf_token %}
+                                <label>ISBN:</label><input type="text" name="isbn" value="{{ book.isbn }}" required><br>
+                                <label>Title:</label><input type="text" name="title" value="{{ book.title }}" required><br>
+                                <label>Author ID:</label><input type="number" name="author" value="{{ book.author.id }}" required><br>
+                                <label>Publisher:</label><input type="text" name="publisher" value="{{ book.publisher }}" required><br>
+                                <label>Publication Year:</label><input type="number" name="publication_year" value="{{ book.publication_year }}" required><br>
+                                <label>Language:</label><input type="text" name="language" value="{{ book.language }}" required><br>
+                                <label>Genre ID:</label><input type="number" name="genre" value="{{ book.genre.id }}" required><br>
+                                <label>Description:</label><textarea name="description">{{ book.description }}</textarea><br>
+                                <label>Total Copies:</label><input type="number" name="total_copies" value="{{ book.total_copies }}" required><br>
+                                <button type="submit">Update Book</button>
+                            </form>
+                        </div>
                         
 
 
@@ -181,3 +190,10 @@
     </div>
 </section>
 {% endblock %}
+
+
+
+
+
+
+

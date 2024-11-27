@@ -1,9 +1,9 @@
-{% extends "admindashboard/baseindex.html" %}
+{% extends "libriarian/baseindex.html" %}
 
 {% block title %}Books Page{% endblock %}
 
 {% block content %}
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">    Dashboard
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Book Dashboard
 </h1>
 
                         <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
@@ -22,7 +22,12 @@
                         
                     </div>
                     <!-- Right Content -->
-                    
+                    <div class="p-2 border rounded bg-light">
+                        <a href="{% url 'add_book' %}" class="btn btn-primary btn-block">
+                            Add Book
+                        </a>
+                    </div>
+                </div>
 
                     <div class="mt-6">
                         <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
@@ -107,7 +112,7 @@
 
 <section class="mt-6 space-y-6 xl:flex xl:space-y-0 xl:-mx-3">
     <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-2/3 xl:p-6">
-        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Add Tags</h2>
+        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Book List</h2>
         
         <p class="flex items-center mt-2 text-gray-500">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
@@ -123,20 +128,33 @@
                     <div class="overflow-hidden">
                         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
                      
-                        <form method="POST" class="w-50 mx-auto"> <!-- Center the form with Bootstrap -->
-                            {% csrf_token %}
-                            
-                            <!-- Tag Name -->
-                            <div class="form-group">
-                                <label for="name">Tag Name:</label>
-                                <input type="text" class="form-control" name="name" id="name" required>
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+                        <div class="container mt-4">
+                            <h2 class="mb-4">Books List</h2>
+                            <div class="row">
+                                {% for book in books %}
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        {% comment %} <img src="{{ book.cover_image.url }}" class="card-img-top" alt="Cover image" style="height: 200px; object-fit: cover;"> {% endcomment %}
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ book.title }}</h5>
+                                            <p class="card-text">
+                                                <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
+                                                <strong>Genre:</strong> {{ book.genre.name }}<br>
+                                                <strong>Availability:</strong> {{ book.get_availability_display }}<br>
+                                            </p>
+                                            <p class="card-text">{{ book.description|truncatewords:20 }}</p>
+                                            <a href="{% url 'edit_book' book.id %}">Edit Book</a>
+                                            <a href="{% url 'remove_book' book.id %}" class="btn btn-sm btn-danger ml-2" onclick="return confirm('Are you sure you want to remove this book?');">Remove</a>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
                             </div>
-                            
-                            <!-- Submit Button -->
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Add Tag</button>
-                            </div>
-                        </form>
+                        </div>
+                        
 
 
                     </div>

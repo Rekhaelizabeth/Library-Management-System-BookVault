@@ -133,6 +133,7 @@ class MemberProfile(models.Model):
     outstanding_fines = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     reserved_books_count = models.IntegerField(default=0)
     favorite_genres = models.CharField(max_length=255, blank=True, null=True)
+    libriarian_approved = models.BooleanField(default=False)
     subscription = models.ForeignKey(
         Subscription, 
         on_delete=models.SET_NULL, 

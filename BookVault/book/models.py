@@ -40,6 +40,7 @@ class Book(models.Model):
         ('checked_out', 'Checked Out'),
         ('damaged', 'Damaged'),
         ('lost', 'Lost'),
+        ('removed','Removed')
     ]
     
     isbn = models.CharField(max_length=13, unique=True)  # ISBN is unique
