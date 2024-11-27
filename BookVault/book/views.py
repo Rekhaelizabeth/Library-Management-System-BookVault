@@ -25,7 +25,8 @@ def member_list(request):
 def approve_member(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
-    return render(request, 'libriarian/member.html', {'users': user})
+    user.save()
+    return redirect('member_list')
 
 
 def add_tag(request):

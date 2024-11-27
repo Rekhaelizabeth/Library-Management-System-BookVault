@@ -142,27 +142,10 @@
                                         {{ user.name }}  <!-- Company Name (user name) -->
                                     </td>
                                     <td class="px-6 py-4 font-medium text-gray-800 whitespace-nowrap">
-                                     <a href="{% url 'approve_member'  %} "> Approve  <!-- Company Name (user name) --><a/>
+                                     <a href="{% url 'approve_member' user.id  %} "> Approve  <!-- Company Name (user name) --><a/>
                                     </td>
                         
-                                    <td class="px-6 py-4 font-medium whitespace-nowrap">
-                                        <div class="relative z-0 flex -space-x-1 overflow-hidden">
-                                            {% for member in user.members.all %}
-                                            <img class="relative z-30 inline-block w-6 h-6 rounded-full ring-2 ring-white" src="{{ member.profile_picture_url }}" alt="{{ member.name }}">
-                                            {% endfor %}
-                                        </div>
-                                    </td>
-                        
-                                    <td class="px-6 py-4 font-medium text-gray-700 whitespace-nowrap">
-                                        ${{ user.budget }}  <!-- Example of the budget field -->
-                                    </td>
-                        
-                                    <td class="px-6 py-4 text-gray-700 capitalize whitespace-nowrap">
-                                        <span class="font-medium text-indigo-500">{{ user.completion }}%</span> <!-- Example of completion field -->
-                                        <div class="w-full h-2 overflow-hidden bg-gray-200 rounded-full">
-                                            <div class="w-{{ user.completion }}% h-full bg-indigo-500"></div> <!-- Dynamic completion bar -->
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                                 {% endfor %}
                             </tbody>
