@@ -7,8 +7,6 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 
 
-# Create your models here.
-
 class Address(models.Model):
     id = models.AutoField(primary_key=True)
     addressline = models.CharField(max_length=255)
@@ -20,8 +18,7 @@ class Address(models.Model):
     def str(self):
         return f"{self.street}, {self.city}, {self.state}, {self.country} - {self.postal_code}"
     
-
-
+    
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:

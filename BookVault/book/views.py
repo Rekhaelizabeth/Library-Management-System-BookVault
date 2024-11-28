@@ -242,3 +242,14 @@ def author_list(request):
     authors = Author.objects.all()  # Fetch all authors from the database
     return render(request, 'libriarian/author_list.html', {'authors': authors})
 
+# View to display genres as buttons
+def genre_categorization(request):
+    genres = Genre.objects.all()  # Fetch all genres
+    return render(request, 'client/genre_categorization.html', {'genres': genres})
+
+# View to display books under a specific genre
+def books_by_genre(request, genre_id):
+    genre = get_object_or_404(Genre, id=genre_id)  # Fetch the specific genre
+    books = Book.objects.filter(genre=genre)  # Get books under this genre
+    return render(request, 'client/books_by_genre.html', {'genre': genre, 'books': books})
+
