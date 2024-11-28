@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
 from usermanagement.models import BookIssueTransaction, MemberProfile, User
@@ -12,6 +13,8 @@ from django.forms.models import model_to_dict
 from .models import Book
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.utils import timezone
+from usermanagement.models import LibrarianProfile
 
 
 def book_list(request):
@@ -21,6 +24,37 @@ def book_list(request):
 def member_list(request):
     user = User.objects.exclude(is_active=True)
     return render(request, 'libriarian/member.html', {'users': user})
+
+def issue_book(request):
+    issue = BookIssueTransaction.objects.filter(status='Requested')
+    print(issue)
+    return render(request, 'libriarian/issue_book.html', {'issue': issue})
+
+def approve_book_request(request, transaction_id):
+    transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+    member_profile = get_object_or_404(MemberProfile, user=transaction.user)
+    
+    # Get the borrowing limit for that user
+    borrowing_limit = member_profile.borrowing_limit
+    return_date = timezone.now() + timedelta(days=borrowing_limit)
+    print(borrowing_limit)
+    print(f"Transaction ID: {transaction_id}")
+    print(f"User: {transaction.user.name}, Borrowing Limit: {borrowing_limit}, status: {transaction.status}")
+    if transaction.status == 'Requested':
+        # Update the status to 'ISSUED'
+        transaction.status = 'ISSUED'
+        transaction.issue_date = timezone.now() 
+        transaction.return_date = return_date
+    
+        transaction.issuedby = LibrarianProfile.objects.get(user=request.user)
+        print(f"User: {transaction.issuedby.user.name}, Borrowing Limit: {borrowing_limit}")
+        
+    
+        transaction.save()
+        
+
+        return redirect('issue_book')
+    return redirect('issue_book')  # Or show an error message if necess
 
 def approve_member(request, user_id):
     user = get_object_or_404(User, id=user_id)

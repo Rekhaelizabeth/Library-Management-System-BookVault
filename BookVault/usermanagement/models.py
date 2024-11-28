@@ -115,6 +115,22 @@ class Subscription(models.Model):
         verbose_name = "Subscription"
         verbose_name_plural = "Subscriptions"
 
+class MemberSubscriptionLog(models.Model):
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField()
+    status=models.BooleanField(default=False)
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[("Pending", "Pending"), ("Completed", "Completed")],
+        default="Pending",
+    )
+    payment_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay Payment ID
+
+    def str(self):
+        return f"{self.subscription.plan_name}"
+
 class MemberProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     membership_type = models.CharField(
@@ -132,7 +148,7 @@ class MemberProfile(models.Model):
     favorite_genres = models.CharField(max_length=255, blank=True, null=True)
     libriarian_approved = models.BooleanField(default=False)
     subscription = models.ForeignKey(
-        Subscription, 
+        MemberSubscriptionLog, 
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True,
@@ -160,8 +176,15 @@ class BookIssueTransaction(models.Model):
         ('RETURNED', 'Returned'),
         ('LOST', 'Issued'),
         ('DAMAGED', 'Damaged'),
+        ('REQUESTED','Requested')
     ]
     status = models.CharField(max_length=10, choices=status_choices, default='ISSUED')
+    issuedby = models.ForeignKey(
+        LibrarianProfile, 
+        on_delete=models.CASCADE, 
+        blank=True,  # Allow this field to be left blank in forms
+        null=True     # Allow this field to be NULL in the database
+    )
 
     def str(self):
         return f"Book: {self.book.title}, Issued to: {self.user.username}, Due: {self.due_date}"

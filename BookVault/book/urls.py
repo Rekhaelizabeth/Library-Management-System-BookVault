@@ -23,4 +23,6 @@ urlpatterns = [
     path('books/<int:book_id>/remove/', views.remove_book, name='remove_book'),
     path('member_list/', views.member_list, name='member_list'),
     path('approve_member/<int:user_id>', views.approve_member, name='approve_member'),
+    path('issue_book/', views.issue_book, name='issue_book'),
+    path('approve_book_request/<int:transaction_id>/', views.approve_book_request, name='approve_book_request'),  # Approve request view
 ]

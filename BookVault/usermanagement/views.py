@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from django.http import HttpResponse
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 import qrcode
 from io import BytesIO
@@ -284,51 +285,43 @@ def generate_qr_code(request):
 
 def borrow_book(request, book_id):
     print("Haiiii")
-    try:
-        # Fetch the book by its ID
-        book = get_object_or_404(Book, id=book_id)
-        
-        # Assuming you have a current user and that user can borrow books
-        user = request.user
-        
-        # Fetch the MemberProfile for the current user
-        member_profile = get_object_or_404(MemberProfile, user=user)
-        
-        # Get the borrowing limit for that user
-        borrowing_limit = member_profile.borrowing_limit
-        return_date = timezone.now() + timedelta(days=borrowing_limit)
-        print(borrowing_limit)
-        print("helloo")
-        print(book)
-        print(user)
-        # Check if there are available copies of the book
-        if book.available_copies > 0:
-            # Create an issue transaction
-            transaction = BookIssueTransaction.objects.create(
-                book=book,
-                user=user,
-                issue_date=timezone.now(),  # Automatically set issue_date
-                return_date=return_date
-            )
-            
-            # Reduce the available copies by 1
-            print("hai")
-            print(book.available_copies)
-            book.available_copies -= 1
-            print(book.available_copies)
-
-            
-            
-            # Optionally, you can set the book status to "checked out"
-            book.availability = 'checked_out'
-            book.save()
-
-            print("Book issued successfully.")
-        else:
-            print("No available copies left.")
     
-    except Exception as e:
-        print(f"Error: {e}")
+    # Fetch the book by its ID
+    book = get_object_or_404(Book, id=book_id)
+    
+    user = request.user
+   
+    member_profile = get_object_or_404(MemberProfile, user=user)
+    
+    # Get the borrowing limit for that user
+    borrowing_limit = member_profile.borrowing_limit
+    return_date = timezone.now() + timedelta(days=borrowing_limit)
+    print(borrowing_limit)
+    print("helloo")
+    print(book)
+    print(user)
+    
+    if book.available_copies > 0:
+        transaction = BookIssueTransaction.objects.create(
+            book=book,
+            user=user,
+            return_date=return_date,
+            status='Requested',
+            
+
+        )
+        
+        print("hai")
+        print(book.available_copies)
+        book.available_copies -= 1
+        print(book.available_copies)
+        
+        book.availability = 'checked_out'
+        book.save()
+
+        print("Book issued successfully.")
+    else:
+        print("No available copies left.")
     
     return redirect('home')  # Redirect to the book list or another page
 

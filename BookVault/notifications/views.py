@@ -2,7 +2,7 @@ import razorpay
 from django.conf import settings
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
-from usermanagement.models import Subscription, MemberProfile
+from usermanagement.models import Subscription, MemberProfile,MemberSubscriptionLog
 from django.contrib.auth.decorators import login_required
 from .models import SubscriptionLog
 from django.http import HttpResponse
@@ -46,12 +46,12 @@ def subscribe_to_plan(request, subscription_id):
             # Step 2: Save the order details in SubscriptionLog
             start_date = timezone.now()
             end_date = start_date + timezone.timedelta(days=subscription.time_period)
-            SubscriptionLog.objects.create(
-                member=member_profile,
+            MemberSubscriptionLog.objects.create(
+                member=request.user,
                 subscription=subscription,
                 start_date=start_date,
                 end_date=end_date,
-                payment_status="Completed",
+                payment_status="Pending",
                 payment_id=razorpay_order["id"],
                 status = True,
             )
@@ -86,7 +86,8 @@ def verify_payment(request):
             payment_id = request.POST.get("razorpay_payment_id")
             order_id = request.POST.get("razorpay_order_id")
             signature = request.POST.get("razorpay_signature")
-
+            
+            print("Welcome")
             # Step 2: Verify the payment signature
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
             params_dict = {
@@ -94,27 +95,36 @@ def verify_payment(request):
                 "razorpay_payment_id": payment_id,
                 "razorpay_signature": signature,
             }
-
+            print("World")
             # Razorpay utility to verify the payment signature
             client.utility.verify_payment_signature(params_dict)
-
+            
             # Step 3: Update the payment status in the database
-            subscription_log = SubscriptionLog.objects.get(payment_id=order_id)
+            subscription_log = MemberSubscriptionLog.objects.get(payment_id=order_id)
             subscription_log.payment_status = "Completed"
             subscription_log.status = True
             subscription_log.save()
 
+
+            member_profile = MemberProfile.objects.get(user=subscription_log.member)
+            print(member_profile.borrowing_limit)
+            member_profile.subscription = subscription_log
+            member_profile.save()
+            print("update")
             # Step 4: Redirect to a success page
             return redirect("subscription_success")
-
+            
         except razorpay.errors.SignatureVerificationError as e:
             # Log error and redirect to an error page
             print(f"Signature verification failed: {e}")
+            print("1")
             return JsonResponse({"status": "failure", "reason": "Invalid signature"}, status=400)
-
+            
         except Exception as e:
             # Handle other unexpected errors
             print(f"Error occurred: {e}")
+            print("2")
             return JsonResponse({"status": "failure", "reason": "Payment verification failed"}, status=400)
     else:
+        print("3")
         return JsonResponse({"status": "failure", "reason": "Invalid request method"}, status=405)
