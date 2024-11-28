@@ -16,6 +16,9 @@ def baseindex(request):
 def librarianbaseindex(request):
     return render(request, 'librairian/baseindex.html')
 
+def baseindexmember(request):
+    return render(request, 'client/baseindexmember.html')
+
 def home(request):
     # Get the total number of entries in each model with status=True
     author_count = Author.objects.filter(status=True).count()
