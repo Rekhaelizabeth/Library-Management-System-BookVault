@@ -25,4 +25,10 @@ urlpatterns = [
     path('approve_member/<int:user_id>', views.approve_member, name='approve_member'),
     path('issue_book/', views.issue_book, name='issue_book'),
     path('approve_book_request/<int:transaction_id>/', views.approve_book_request, name='approve_book_request'),  # Approve request view
+
+    path('tag_categorization/', views.tag_categorization, name='tag_categorization'),
+    path('tag_categorization/<int:tag_id>/books/', views.books_by_tag, name='books_by_tag'),
+
+    path('author-categorization/', views.author_categorization, name='author_categorization'),
+    path('books-by-author/<int:author_id>/', views.books_by_author, name='books_by_author'),
 ]

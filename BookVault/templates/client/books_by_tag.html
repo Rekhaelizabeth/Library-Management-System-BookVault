@@ -1,0 +1,19 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Book Description{% endblock %}
+
+{% block content %}
+    <h1>Books under "{{ tag.name }}"</h1>
+    <ul>
+        {% for book in books %}
+            <li>
+                <strong>{{ book.title }}</strong> by {{ book.author.first_name }} {{ book.author.last_name }}
+                <p>{{ book.description }}</p>
+                <p><strong>Available Copies:</strong> {{ book.available_copies }}</p>
+            </li>
+        {% empty %}
+            <p>No books available under this tag.</p>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'tag_categorization' %}">Back to Tags</a>
+    {% endblock %}

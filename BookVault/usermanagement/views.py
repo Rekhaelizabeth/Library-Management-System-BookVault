@@ -187,7 +187,7 @@ def user_login(request):
             
             # Redirect based on the user role
             if user.role == 'Admin':
-                return redirect('admin_dashboard')  # Replace with your Admin dashboard URL
+                return redirect('admindashboard')  # Replace with your Admin dashboard URL
             elif user.role == 'Librarian':
                 return redirect('librarian_dashboard')  # Replace with your Librarian dashboard URL
             elif user.role == 'Member':
@@ -388,3 +388,10 @@ def book_description(request, book_id):
         'reviews': reviews,
         'user_has_borrowed': user_has_borrowed,
     })
+def memberview(request):
+    # Fetch all member profiles along with their related user, subscription, and address details
+    members = MemberProfile.objects.select_related(
+        'user', 'subscription', 'user__address'
+    ).all()
+    
+    return render(request, 'admindashboard/memberview.html', {'members': members})

@@ -287,3 +287,24 @@ def books_by_genre(request, genre_id):
     books = Book.objects.filter(genre=genre)  # Get books under this genre
     return render(request, 'client/books_by_genre.html', {'genre': genre, 'books': books})
 
+
+def tag_categorization(request):
+    tags = Tag.objects.all()  # Fetch all tags
+    return render(request, 'client/tag_categorization.html', {'tags': tags})
+
+def books_by_tag(request, tag_id):
+    tag = get_object_or_404(Tag, id=tag_id)
+    books = Book.objects.filter(tags=tag)  # Fetch all books under the selected tag
+    return render(request, 'client/books_by_tag.html', {'tag': tag, 'books': books})
+
+
+def author_categorization(request):
+    """Display a list of all authors with buttons."""
+    authors = Author.objects.all()
+    return render(request, 'client/author_categorization.html', {'authors': authors})
+
+def books_by_author(request, author_id):
+    """Display all books by a specific author."""
+    author = get_object_or_404(Author, id=author_id)
+    books = Book.objects.filter(author=author)
+    return render(request, 'client/books_by_author.html', {'author': author, 'books': books})

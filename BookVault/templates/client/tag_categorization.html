@@ -1,0 +1,16 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Book Description{% endblock %}
+
+{% block content %}
+    <h1>Tags</h1>
+    <div>
+        {% for tag in tags %}
+            <button onclick="window.location.href='{% url 'books_by_tag' tag.id %}'">
+                {{ tag.name }}
+            </button>
+        {% endfor %}
+    </div>
+
+    {% endblock %}
+

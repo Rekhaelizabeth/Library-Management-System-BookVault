@@ -1,0 +1,29 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Book Description{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Books by {{ author.first_name }} {{ author.last_name }}</h1>
+    <div class="row">
+        {% if books %}
+            {% for book in books %}
+            <div class="col-md-4">
+                <div class="card mb-3">
+                    <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}" />
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="card-text">{{ book.description|truncatewords:20 }}</p>
+                        <p class="card-text"><strong>Publisher:</strong> {{ book.publisher }}</p>
+                        <p class="card-text"><strong>Year:</strong> {{ book.publication_year }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No books found for this author.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

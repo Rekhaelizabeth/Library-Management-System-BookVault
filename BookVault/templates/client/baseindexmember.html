@@ -33,9 +33,11 @@
 				<div class="container">
 					<nav id="navigation" class="navigation navigation-landscape">
 						<div class="nav-header">
-							<a class="nav-brand" href="404.html#">
-								<img src="{% static 'assets/img/logo.png' %}" class="logo" alt="" />
-							</a>
+							<a class="nav-brand fixed-logo" href="index.html#"><img 
+								src="{% static 'assets/logo/logocrop.png' %}" 
+								class="logo" 
+								alt="Logo" 
+								style="height: 35px; width: 180px;" />
 							<div class="nav-toggle"></div>
 							<div class="mobile_nav">
 								<ul>
@@ -168,7 +170,7 @@
 				<div class="container">
 					<div class="row justify-content-center">
 						
-						<div class="col-lg-6 col-md-10">
+						<div class="col-lg-12 col-md-10">
 							
 							{% block content %}
                         
