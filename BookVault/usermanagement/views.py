@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 import qrcode
+from django.core.exceptions import PermissionDenied
 from io import BytesIO
 from book.models import Author,Genre,Book,Tag
 from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription , Reviews
@@ -37,6 +38,8 @@ def home(request):
 
     return render(request, 'client/index.html', context)
 def add_subscription(request):
+    if request.user.role != "Admin":
+        raise PermissionDenied  # If not, raise PermissionDenied
     if request.method == "POST":
         plan_name = request.POST.get("plan_name")
         price = request.POST.get("price")
@@ -219,11 +222,14 @@ def custom_logout(request):
     
     # Redirect to the desired URL
     return redirect('http://127.0.0.1:8000/')
-
+def access_denied(request):
+    return render(request, 'client/access_denied.html', status=403)
 @login_required
 def profile(request):
     # Fetch the logged-in user and their profile
     user = request.user  # Automatically gets the current logged-in user
+    if user.role != "Member":
+        raise PermissionDenied  # If not, raise PermissionDenied
     member_profile = MemberProfile.objects.get(user=user)  # Get associated profile
     address = user.address  # Assuming the address is a related model to user
 
@@ -284,6 +290,8 @@ def generate_qr_code(request):
     return HttpResponse(qr_image, content_type='image/png')
 
 def borrow_book(request, book_id):
+    if request.user.role != "Member":
+        raise PermissionDenied  # If not, raise PermissionDenied
     print("Haiiii")
     
     # Fetch the book by its ID
@@ -326,6 +334,8 @@ def borrow_book(request, book_id):
     return redirect('home')  # Redirect to the book list or another page
 
 def reserve_book(request, book_id):
+    if request.user.role != "Member":
+        raise PermissionDenied  # If not, raise PermissionDenied
     # Fetch the book instance
     book = get_object_or_404(Book, id=book_id)
 
@@ -356,6 +366,8 @@ def reserve_book(request, book_id):
 
 @login_required
 def book_description(request, book_id):
+    if request.user.role != "Member":
+        raise PermissionDenied  # If not, raise PermissionDenied
     book = get_object_or_404(Book, id=book_id)
     user_has_borrowed = BookIssueTransaction.objects.filter(book=book, user=request.user).exists()
 
@@ -389,6 +401,8 @@ def book_description(request, book_id):
         'user_has_borrowed': user_has_borrowed,
     })
 def memberview(request):
+    if request.user.role != "Admin":
+        raise PermissionDenied  # If not, raise PermissionDenied
     # Fetch all member profiles along with their related user, subscription, and address details
     members = MemberProfile.objects.select_related(
         'user', 'subscription', 'user__address'

@@ -22,6 +22,7 @@ urlpatterns = [
     path('reserve/<int:book_id>/', views.reserve_book, name='reserve_book'),
     path('book/<int:book_id>/', views.book_description, name='book_description'),
     path('memberview/', views.memberview, name='memberview'),
+    path('access-denied/', views.access_denied, name='access_denied'),
 
     
 

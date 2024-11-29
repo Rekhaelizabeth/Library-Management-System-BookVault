@@ -7,17 +7,21 @@ from django.contrib.auth.decorators import login_required
 from .models import SubscriptionLog
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 
 
 
 @login_required
 def list_subscriptions(request):
+    if request.user.role != "Member":
+        raise PermissionDenied  # If not, raise PermissionDenied
     subscriptions = Subscription.objects.all()
     return render(request, "member/list_subscriptions.html", {"subscriptions": subscriptions})
 @login_required
 def subscription_success(request):
+    if request.user.role != "Member":
+        raise PermissionDenied 
     return render(request, "member/subscription_success.html")
 
 
@@ -25,6 +29,8 @@ client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET)
 
 @login_required
 def subscribe_to_plan(request, subscription_id):
+    if request.user.role != "Member":
+        raise PermissionDenied 
     subscription = get_object_or_404(Subscription, id=subscription_id)
     member_profile = MemberProfile.objects.get(user=request.user)
 
