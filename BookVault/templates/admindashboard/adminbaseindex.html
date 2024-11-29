@@ -1,35 +1,42 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="canonical" href="404.html">
+    <link rel="canonical" href="index.html">
     <meta name="description" content="Awesome responsive dashboard build with Tailwind CSS &amp; AlpineJS.">
     
-    <title>Meraki UI Dashboard </title>
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
 
-    <link rel="stylesheet" href="assets/build/css/main.css%3Fid=338a33ffc2adb911c9d788d65d90e8a5.css">
+    <link rel="stylesheet" href="{% static 'assets/build/css/main.css' %}">
 
-    <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/images/logo.svg' %}">
 
-    <script defer src="assets/build/js/main.js%3Fid=7a85d29ed8f1e7869c43a8c9a7f4f6a1"></script>
+    <script defer src="{% static 'assets/build/js/main.js' %}"></script>
 </head>
 <body class="overflow-hidden">
     <div x-data="{ sidebarOpen: false }" class="relative flex h-screen text-gray-800 bg-white font-roboto">
         <div x-cloak :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
 
 <div x-cloak :class="sidebarOpen ? 'translate-x-0 ease-in' : '-translate-x-full ease-out'" class="fixed inset-y-0 left-0 z-30 w-64 px-4 overflow-y-auto transition duration-200 transform bg-white border-r border-gray-100 lg:translate-x-0 lg:relative lg:inset-0 ">
-    <div class="flex items-center mt-8">
-        <img class="w-auto h-8" src="assets/images/full-logo.svg" alt="">
+    <div class="flex items-center mt-8" style="position: relative;">
+        <a class="nav-brand fixed-logo" >
+            <img 
+                src="{% static 'assets/logo/logocrop.png' %}" 
+                class="logo" 
+                alt="Logo" 
+                style="height: 35px; width: 180px;" 
+            />
+        </a>
     </div>
 
     <hr class="my-6 border-gray-100">
-
     <nav class="space-y-8">
         <div class="space-y-4">
-            <h3 class="px-4 text-sm tracking-wider text-gray-400 uppercase">PAGES</h3>
+          
     
-            <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-200 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="index.html">
+            <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40"" href="{% url 'admindashboard' %}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
@@ -37,14 +44,14 @@
                 <span class="mx-3 font-medium capitalize">Dashboard</span>
             </a>
     
-            <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="forms.html">
+            {% comment %} <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="forms.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
                 </svg>
     
                 <span class="mx-3 font-medium capitalize">forms</span>
-            </a>
-
+            </a> {% endcomment %}
+{% comment %} 
             <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="charts.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
@@ -52,31 +59,31 @@
                 </svg>
     
                 <span class="mx-3 font-medium capitalize">Charts</span>
-            </a>
+            </a> {% endcomment %}
     
-            <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="modals.html">
+            {% comment %} <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="modals.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
     
                 <span class="mx-3 font-medium capitalize">modals</span>
-            </a>
-    
+            </a> {% endcomment %}
+{% comment %}     
             <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="tables.html">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M13 10V14H19V10H13ZM11 10H5V14H11V10ZM13 19H19V16H13V19ZM11 19V16H5V19H11ZM13 5V8H19V5H13ZM11 5H5V8H11V5ZM19 3C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19Z" fill="currentColor"></path>
                 </svg>
     
                 <span class="mx-3 font-medium capitalize">Tables</span>
-            </a>
+            </a> {% endcomment %}
 
-            <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="tasks.html">
+            {% comment %} <a class="flex items-center px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="tasks.html">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
     
                 <span class="mx-3 font-medium capitalize">tasks</span>
-            </a>
+            </a> {% endcomment %}
 
             <div x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center justify-between w-full px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40">
@@ -85,7 +92,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
                         </svg>
     
-                        <span class="mx-3 font-medium capitalize">Example</span>
+                        <span class="mx-3 font-medium capitalize">Books</span>
                     </span>
     
                     <span class="rtl:rotate-180">
@@ -106,8 +113,78 @@
                     x-transition:leave-end="opacity-0 -translate-y-5"
                     class="mt-2"
                 >
-                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="blank.html">Blank</a>
-                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="404.html">404</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'authoradmin_list' %}">Author</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'tagadmin_list' %}">Tag</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'genreadmin_list' %}">Genre</a>
+                    {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'book_list' %}">Book</a> {% endcomment %}
+                </div>
+            </div>
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="flex items-center justify-between w-full px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40">
+                    <span class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                        </svg>
+    
+                        <span class="mx-3 font-medium capitalize">Users</span>
+                    </span>
+    
+                    <span class="rtl:rotate-180">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path x-show="! open" d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path x-show="open" d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
+                </button>
+    
+                <div 
+                    x-show="open" 
+                    x-transition:enter="transition ease-out duration-200 transform"
+                    x-transition:enter-start="opacity-0 -translate-y-5"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 -translate-y-5"
+                    class="mt-2"
+                >
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'memberview' %}">Members</a>
+                    {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'tag_list' %}">Librarian</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'genre_list' %}">Genre</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'book_list' %}">Book</a> {% endcomment %}
+                </div>
+            </div>
+            <div x-data="{ open: false }">
+                <button @click="open = !open" class="flex items-center justify-between w-full px-4 py-2 text-gray-500 transition-colors duration-300 transform rounded-lg hover:text-gray-600 hover:bg-gray-100 bg-opacity-40">
+                    <span class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                        </svg>
+    
+                        <span class="mx-3 font-medium capitalize">Subscriptions</span>
+                    </span>
+    
+                    <span class="rtl:rotate-180">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path x-show="! open" d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path x-show="open" d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </span>
+                </button>
+    
+                <div 
+                    x-show="open" 
+                    x-transition:enter="transition ease-out duration-200 transform"
+                    x-transition:enter-start="opacity-0 -translate-y-5"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-200 transform"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 -translate-y-5"
+                    class="mt-2"
+                >
+                    {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'author_list' %}">Subscription Plans</a> {% endcomment %}
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_subscription' %}">Add Subscription</a>
+                    {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'genre_list' %}">Genre</a>
+                    <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'book_list' %}">Book</a> {% endcomment %}
                 </div>
             </div>
         </div>
@@ -237,15 +314,15 @@
                     </div>
     
                     <div class="py-2 divide-y divide-gray-100">
-                        <a href="404.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
+                        <a href="index.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
                             <p class="mx-2 text-sm text-gray-600 truncate"><span class="font-bold" href="#">Modern </span> Project updated . 11m</p>
                         </a>
     
-                        <a href="404.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
+                        <a href="index.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
                             <p class="mx-2 text-sm text-gray-600 truncate"><span class="font-bold" href="#">Slick Net</span> start following you . 45m</p>
                         </a>
     
-                        <a href="404.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
+                        <a href="index.html#" class="flex px-4 py-3 -mx-2 transition-colors duration-200 transform hover:bg-gray-50">
                             <p class="mx-2 text-sm text-gray-600 truncate"><span class="font-bold" href="#">Abigail Bennett</span> create new project . 3h</p>
                         </a>
                     </div>
@@ -298,41 +375,9 @@
             <main class="flex-1 overflow-y-auto">
                 <div class="px-4 py-8 sm:px-6">
                     <div>
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">    404
-</h1>
-
-                        <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
-                            <a href="404.html#" class="text-gray-600 hover:underline">
-                                Pages
-                            </a>
-
-                            <span class="mx-1 text-gray-500">
-                                /
-                            </span>
-
-                            <a href="404.html#" class="text-indigo-600 hover:underline">
-                                    404
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="mt-6">
-                        <div class="flex flex-col items-center justify-center h-96">
-    <h1 class="font-bold text-transparent text-7xl md:text-9xl bg-clip-text bg-gradient-to-r from-indigo-800 via-indigo-900 to-gray-900">404</h1>
-
-    <div class="w-32 h-1 my-6 bg-gradient-to-r from-indigo-800 via-indigo-900 to-gray-900 md:my-6"></div>
-    
-    <h2 class="text-xl font-semibold text-gray-800 md:text-3xl">Page not found</h2>
-
-    
-    <a href="index.html" class="flex items-center px-4 py-2 mt-6 tracking-wide text-gray-600 capitalize transition-colors duration-200 transform bg-white rounded-md hover:bg-gray-50 focus:outline-none focus:ring focus:ring-gray-400 focus:ring-opacity-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mx-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-        </svg>
-        
-        <span class="mx-1.5">Go Back</span>
-    </a>
-</div>
+                        {% block content %}
+                        
+                        {% endblock %}
                     </div>
                 </div>
             </main>

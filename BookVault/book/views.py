@@ -308,3 +308,16 @@ def books_by_author(request, author_id):
     author = get_object_or_404(Author, id=author_id)
     books = Book.objects.filter(author=author)
     return render(request, 'client/books_by_author.html', {'author': author, 'books': books})
+
+
+def tagadmin_list(request):
+    tags = Tag.objects.all()  # Retrieve all tags from the database
+    return render(request, 'admindashboard/tagadmin_list.html', {'tags': tags})
+
+def genreadmin_list(request):
+    genres = Genre.objects.all()  # Fetch all genres from the database
+    return render(request, 'admindashboard/genreadmin_list.html', {'genres': genres})
+
+def authoradmin_list(request):
+    authors = Author.objects.all()  # Fetch all authors from the database
+    return render(request, 'admindashboard/authoradmin_list.html', {'authors': authors})

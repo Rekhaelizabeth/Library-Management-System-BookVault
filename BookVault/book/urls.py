@@ -31,4 +31,9 @@ urlpatterns = [
 
     path('author-categorization/', views.author_categorization, name='author_categorization'),
     path('books-by-author/<int:author_id>/', views.books_by_author, name='books_by_author'),
+
+
+    path('tagadmin_list/', views.tagadmin_list, name='tagadmin_list'),
+    path('genreadmin_list/', views.genreadmin_list, name='genreadmin_list'),
+    path('authoradmin_list/', views.authoradmin_list, name='authoradmin_list'),
 ]
