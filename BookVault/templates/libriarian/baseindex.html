@@ -341,7 +341,7 @@
     
             <div x-data="{ dropdownOpen: false }" class="relative inline-block">
                 <button @click="dropdownOpen = ! dropdownOpen" class="relative z-10 flex items-center flex-shrink-0 text-sm text-gray-600 focus:outline-none">
-                    <img class="flex-shrink-0 object-cover w-8 h-8 rounded-full" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" alt="john avatar">
+                    <img class="flex-shrink-0 object-cover w-8 h-8 rounded-full" src="{% static 'assets/images/boy.png' %}" alt="john avatar">
                 </button>
     
                 <div class="absolute right-0 z-20 w-56 py-2 mt-2 overflow-hidden bg-white rounded-md shadow-xl rtl:right-auto rtl:left-0"
@@ -356,10 +356,10 @@
                     @click.away="dropdownOpen = false"
                 >
                     <a href="profile.html" class="flex items-center p-3 -mt-2 text-sm text-gray-600 transition-colors duration-200 transform hover:bg-gray-100">
-                        <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" alt="john avatar">
+                        <img class="flex-shrink-0 object-cover mx-1 rounded-full w-9 h-9" src="{% static 'assets/images/boy.png' %}" alt="john avatar">
                         <div class="mx-1">
-                            <h1 class="text-sm font-semibold text-gray-700">John Doe</h1>
-                            <p class="text-sm text-gray-500">johndoe@example.com</p>
+                            <h1 class="text-sm font-semibold text-gray-700">{{user.name}}</h1>
+                            <p class="text-sm text-gray-500">{{user.email}}</p>
                         </div>
                     </a>
     

@@ -76,7 +76,7 @@
 						</div>
 						<div class="nav-menus-wrapper" style="transition-property: none;">
 							<ul class="nav-menu">
-								<li><a href="{% url 'admindashboard' %}">Admin<span class="submenu-indicator"></span></a>
+								{% comment %} <li><a href="{% url 'admindashboard' %}">Admin<span class="submenu-indicator"></span></a> {% endcomment %}
 								{% comment %} <li><a href="{% url 'memberdashboard' %}">Member<span class="submenu-indicator"></span></a>
 								<li><a href="{% url 'librariandashboard' %}">Libriarian<span class="submenu-indicator"></span></a> {% endcomment %}
 								<li><a href="index.html#">Home<span class="submenu-indicator"></span></a>
@@ -476,7 +476,7 @@
 										</div>
 										<div class="_category_caption">
 											<h5>Tags</h5>
-											<span>{{ tag_count }} Properties</span> <!-- Dynamic count for Tags -->
+											<span>{{ tag_count }}</span> <!-- Dynamic count for Tags -->
 										</div>
 									</div>
 								</a>
@@ -494,7 +494,7 @@
 										</div>
 										<div class="_category_caption">
 											<h5>Authors</h5>
-											<span>{{ author_count }} Properties</span> <!-- Dynamic count for Authors -->
+											<span>{{ author_count }}</span> <!-- Dynamic count for Authors -->
 										</div>
 									</div>
 								</a>
@@ -529,7 +529,7 @@
 										</div>
 										<div class="_category_caption">
 											<h5>Genre</h5>
-											<span>{{ genre_count }} Properties</span> <!-- Dynamic count for Genres -->
+											<span>{{ genre_count }}</span> <!-- Dynamic count for Genres -->
 										</div>
 									</div>
 								</a>
