@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'analytics',
     'book',
     'jazzmin',
-    
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +76,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'BookVault.wsgi.application'
-
+AWS_ACCESS_KEY_ID = 'AKIA47CR3LBVNTKUID5O'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'bookvaults3'
+AWS_REGION = 'us-east-1'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -130,6 +135,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
 
 
 

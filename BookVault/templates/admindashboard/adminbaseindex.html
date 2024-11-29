@@ -180,8 +180,9 @@
                     x-transition:leave-start="opacity-100 translate-y-0"
                     x-transition:leave-end="opacity-0 -translate-y-5"
                     class="mt-2"
-                >
+                >     
                     {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'author_list' %}">Subscription Plans</a> {% endcomment %}
+                     <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'view_subscription' %}">Subscription Plans</a>
                     <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'add_subscription' %}">Add Subscription</a>
                     {% comment %} <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'genre_list' %}">Genre</a>
                     <a class="block py-2 text-sm text-gray-500 transition-colors duration-300 transform rounded-lg pl-14 rtl:pr-14 hover:text-gray-600 hover:bg-gray-100 bg-opacity-40" href="{% url 'book_list' %}">Book</a> {% endcomment %}

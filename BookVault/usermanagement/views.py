@@ -433,3 +433,88 @@ def memberview(request):
     ).all()
     
     return render(request, 'admindashboard/memberview.html', {'members': members})
+
+from django.http import JsonResponse
+import boto3
+from django.conf import settings
+import base64
+from io import BytesIO
+from PIL import Image
+import json
+import uuid
+import logging
+import boto3
+import json
+import base64
+import uuid
+from io import BytesIO
+from PIL import Image
+from django.http import JsonResponse
+from django.conf import settings
+import botocore
+# Enable debug logging for boto3 and botocore
+boto3.set_stream_logger(name='botocore', level=logging.DEBUG)
+from django.http import JsonResponse
+from django.core.exceptions import ObjectDoesNotExist
+from PIL import Image
+from io import BytesIO
+import base64
+import uuid
+import json
+import logging
+import boto3
+import botocore
+from .models import MemberProfile  # Import your model for MemberProfile
+
+def upload_membership_card(request):
+    if request.method == 'POST':
+        try:
+            # Ensure the user is authenticated
+            if not request.user.is_authenticated:
+                return JsonResponse({"error": "User is not authenticated"}, status=401)
+            
+            # Extract the image from the POST request
+            data = json.loads(request.body)
+            image_data = data['image']
+            
+            # Retrieve member_profile from the logged-in user
+            try:
+                member_profile = MemberProfile.objects.get(user=request.user)
+            except ObjectDoesNotExist:
+                return JsonResponse({"error": "MemberProfile not found"}, status=404)
+            
+            member_id = member_profile.id  # Get the member_id from the MemberProfile
+            
+            # Decode the base64 image
+            image_data = image_data.split(',')[1]  # Remove the base64 header part
+            img = Image.open(BytesIO(base64.b64decode(image_data)))
+            
+            # Initialize S3 client with Signature Version 4 enabled
+            s3_client = boto3.client('s3', 
+                                     aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                                     aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                                     region_name=settings.AWS_REGION,
+                                     config=botocore.client.Config(signature_version='s3v4'))  # Signature Version 4
+
+            # Generate a unique file name for the image
+            folder_name = "membershipcards"  # The folder inside the bucket
+            file_name = f"{folder_name}/{member_id}.png"
+            buffer = BytesIO()
+            img.save(buffer, "PNG")
+            buffer.seek(0)
+            
+            # Upload the image to S3
+            s3_client.upload_fileobj(buffer, settings.AWS_STORAGE_BUCKET_NAME, file_name, ExtraArgs={'ACL': 'public-read'})
+            
+            # Get the image URL
+            image_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+
+            # Save the image URL to the MemberProfile model associated with the logged-in user
+            member_profile.membership_card_url = image_url  # Assuming the field is 'membership_card_url'
+            member_profile.save()
+
+            return JsonResponse({"imageUrl": image_url})
+        except Exception as e:
+            logging.error(f"Error occurred while uploading membership card: {str(e)}")
+            return JsonResponse({"error": str(e)}, status=500)
+    return JsonResponse({"error": "Invalid request"}, status=400)
