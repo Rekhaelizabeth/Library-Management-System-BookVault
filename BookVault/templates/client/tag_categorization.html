@@ -3,14 +3,34 @@
 {% block title %}Book Description{% endblock %}
 
 {% block content %}
-    <h1>Tags</h1>
-    <div>
+<div class="container my-5">
+    <!-- Header -->
+    <h1 class="text-center mb-4">Tags</h1>
+
+    <!-- Tags Section -->
+    <div class="d-flex flex-wrap justify-content-center">
         {% for tag in tags %}
-            <button onclick="window.location.href='{% url 'books_by_tag' tag.id %}'">
-                {{ tag.name }}
-            </button>
+        <button 
+            class="btn tag-button m-2"
+            onclick="window.location.href='{% url 'books_by_tag' tag.id %}'">
+            {{ tag.name }}
+        </button>
         {% endfor %}
     </div>
+</div>
 
-    {% endblock %}
+<!-- Custom Inline CSS -->
+<style>
+    .tag-button {
+        border: 2px solid red; /* Outline color */
+        color: black; /* Text color */
+        background-color: white; /* Button background */
+        transition: all 0.3s ease; /* Smooth hover effect */
+    }
 
+    .tag-button:hover {
+        background-color: red; /* Hover background color */
+        color: white; /* Hover text color */
+    }
+</style>
+{% endblock %}

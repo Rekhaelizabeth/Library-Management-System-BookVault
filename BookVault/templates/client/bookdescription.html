@@ -26,6 +26,20 @@
                         {% else %}
                             <p class="text-muted">You need an active subscription to borrow or reserve books.</p>
                         {% endif %}
+
+                        <div class="related-books mt-5">
+                            <h3>Related Books</h3>
+                            <ul>
+                                {% for related_book in related_books %}
+                                    <li>
+                                        <a href="{% url 'book_description' book_id=related_book.id %}">{{ related_book.title }}</a>
+                                    </li>
+                                {% empty %}
+                                    <li>No related books available.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
                     </div>
                     
                 </div>

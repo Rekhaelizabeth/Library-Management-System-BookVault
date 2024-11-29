@@ -3,7 +3,7 @@
 {% block title %}Books Page{% endblock %}
 
 {% block content %}
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">   Tag List
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Member subscription
 </h1>
 
                         <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
@@ -104,6 +104,7 @@
     </div>
 </section>
 
+
 <div class="flex flex-col mt-8">
     <div class="overflow-x-auto">
         <div class="inline-block min-w-full align-middle">
@@ -111,36 +112,72 @@
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
              
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-                      
-                        <table class="table table-bordered">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th></th>
-                                    <th>Name</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for tag in tags %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ tag.name }}</td>
-                                        <td>{{ tag.status|yesno:"Active,Inactive" }}</td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="3" class="text-center">No tags found.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+
+                <div class="container mt-4">
         
+        
+                    <form method="post" class="container mt-5 p-4 border rounded" style="max-width: 600px; border-color: #ddd;">
+                        {% csrf_token %}
+                        <h2 class="text-center mb-4">Add Subscription Plan</h2>
+                        
+                        <!-- Plan Name -->
+                        <div class="mb-3">
+                            <label for="plan_name" class="form-label">Plan Name:</label>
+                            <input type="text" id="plan_name" name="plan_name" class="form-control" required>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Price:</label>
+                            <input type="number" id="price" name="price" step="0.01" class="form-control" required>
+                        </div>
+                        
+                        <!-- Time Period -->
+                        <div class="mb-3">
+                            <label for="time_period" class="form-label">Time Period (days):</label>
+                            <input type="number" id="time_period" name="time_period" class="form-control" required>
+                        </div>
+                        
+                        <!-- Book Reservation Count -->
+                        <div class="mb-3">
+                            <label for="book_reservation_count" class="form-label">Book Reservation Count:</label>
+                            <input type="number" id="book_reservation_count" name="book_reservation_count" class="form-control" required>
+                        </div>
+                        
+                        <!-- Issue Book Count -->
+                        <div class="mb-3">
+                            <label for="issue_book_count" class="form-label">Issue Book Count:</label>
+                            <input type="number" id="issue_book_count" name="issue_book_count" class="form-control" required>
+                        </div>
+                        
+                        <!-- External Library Access -->
+                        <div class="mb-3">
+                            <label for="external_library_access" class="form-label">External Library Access:</label>
+                            <select id="external_library_access" name="external_library_access" class="form-select" required>
+                                <option value="True">Yes</option>
+                                <option value="False">No</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Add Subscription</button>
+                        </div>
+                    </form>
+                    
                 
+                </div>
+                
+
 
             </div>
         </div>
     </div>
 </div>
 
-
 {% endblock %}
+
+
+
+
+

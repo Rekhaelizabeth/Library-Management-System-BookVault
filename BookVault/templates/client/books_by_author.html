@@ -23,6 +23,11 @@
         {% else %}
             <p>No books found for this author.</p>
         {% endif %}
+        <div class="text-center mt-4">
+            <a href="{% url 'author_categorization' %}" class="btn btn-outline-danger">
+                Back to Authors
+            </a>
+        </div>
     </div>
 </div>
 

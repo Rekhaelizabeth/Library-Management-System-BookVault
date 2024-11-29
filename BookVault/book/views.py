@@ -321,3 +321,8 @@ def genreadmin_list(request):
 def authoradmin_list(request):
     authors = Author.objects.all()  # Fetch all authors from the database
     return render(request, 'admindashboard/authoradmin_list.html', {'authors': authors})
+
+def bookadmin_list(request):
+    books = Book.objects.all()
+    return render(request, 'admindashboard/bookadmin_list.html', {'books': books})
+

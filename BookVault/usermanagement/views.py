@@ -8,7 +8,7 @@ import qrcode
 from django.core.exceptions import PermissionDenied
 from io import BytesIO
 from book.models import Author,Genre,Book,Tag
-from .models import BookIssueTransaction, BookReservation, User, Address, MemberProfile, Subscription , Reviews
+from .models import BookIssueTransaction, BookReservation, MemberSubscriptionLog, User, Address, MemberProfile, Subscription , Reviews
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -65,7 +65,7 @@ def add_subscription(request):
         return redirect("add_subscription")  # Redirect to the same page or another
 
 
-    return render(request, 'member/add_subscription.html')
+    return render(request, 'admindashboard/add_subscription.html')
 # def login(request):
 #     return render(request, 'client/login.html')
 
@@ -227,30 +227,46 @@ def custom_logout(request):
     return redirect('http://127.0.0.1:8000/')
 def access_denied(request):
     return render(request, 'client/access_denied.html', status=403)
+from datetime import date
+
 @login_required
 def profile(request):
     # Fetch the logged-in user and their profile
     user = request.user  # Automatically gets the current logged-in user
     if user.role != "Member":
-        return redirect("error403")
+        raise PermissionDenied  # If not, raise PermissionDenied
     member_profile = MemberProfile.objects.get(user=user)  # Get associated profile
     address = user.address  # Assuming the address is a related model to user
+
+    # Get the active subscription for the user
+    subscription_log = MemberSubscriptionLog.objects.filter(member=user).last()  # Get the last subscription log
+
+    # Check if the subscription is active (not expired)
+    is_active_subscription = subscription_log and subscription_log.end_date >= date.today()
 
     # Pass data to template
     return render(request, "client/profile.html", {
         'user': user,
         'member_profile': member_profile,
-        'address': address,  # Include the address object
+        'address': address,
+        'subscription_log': subscription_log,
+        'is_active_subscription': is_active_subscription,  # Pass this flag to the template
     })
-
+def calculate_days_left(subscription_log):
+    if subscription_log and subscription_log.end_date >= date.today():
+        return (subscription_log.end_date - date.today()).days
+    return 0
+@login_required
 def generate_qr_code(request):
-    user = request.user  # Assuming you're using the logged-in user
-    # Fetch related models
-    address = user.address  # Address of the user
-    member_profile = MemberProfile.objects.get(user=user)  # MemberProfile of the user
-    subscription = member_profile.subscription  # Subscription of the user (if exists)
+    user = request.user  # Get the logged-in user
+    address = user.address  # Get address related to the user
+    member_profile = MemberProfile.objects.get(user=user)  # Fetch the member profile
+    subscription_log = MemberSubscriptionLog.objects.filter(member=user).last()  # Get the last subscription log
 
-    # Format the user data into a string
+    # Check if subscription is active
+    is_active_subscription = subscription_log and subscription_log.end_date >= date.today()
+    days_left = calculate_days_left(subscription_log)
+    # Format user data into a string for QR code
     user_data = f"""
     Name: {user.name}
     Email: {user.email}
@@ -269,19 +285,21 @@ def generate_qr_code(request):
     
     Membership:
     Membership Type: {member_profile.membership_type}
-    Expiry Date: {member_profile.membership_expiry.strftime('%F')}
     Borrowing Limit: {member_profile.borrowing_limit}
     Outstanding Fines: ${member_profile.outstanding_fines}
     Reserved Books Count: {member_profile.reserved_books_count}
     
     Subscription:
-    Plan Name: {subscription.plan_name if subscription else 'None'}
-    Price: ${subscription.price if subscription else 'N/A'}
-    Period: {subscription.time_period if subscription else 'N/A'} days
-    External Library Access: {'Yes' if subscription.external_library_access else 'No'}
+    Plan Name: {subscription_log.subscription.plan_name }
+    Price: ${subscription_log.subscription.price }
+    Period: {subscription_log.subscription.time_period } days
+    External Library Access: {'Yes' if subscription_log and subscription_log.subscription.external_library_access else 'No'}
+    Active Subscription: {'Yes' if is_active_subscription else 'No'}
+    Days Left: {days_left} days
     """
-
-    # Generate QR code from user data
+    print("qr now data")
+    print(user_data)
+    # Generate QR code from the formatted user data
     qr = qrcode.make(user_data)
     
     # Create a BytesIO stream to save the QR code image in memory
@@ -289,7 +307,7 @@ def generate_qr_code(request):
     qr.save(qr_image, 'PNG')
     qr_image.seek(0)
     
-    # Create an HTTP response with the QR code image
+    # Return the QR code image as an HTTP response
     return HttpResponse(qr_image, content_type='image/png')
 
 def borrow_book(request, book_id):
@@ -373,6 +391,8 @@ def book_description(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     user_has_borrowed = BookIssueTransaction.objects.filter(book=book, user=request.user).exists()
 
+    related_books = book.related_titles.all()
+
     if request.method == "POST" and user_has_borrowed:
         # Get the rating and review from the form
         rating = request.POST.get('rating')
@@ -389,6 +409,7 @@ def book_description(request, book_id):
                 user=request.user,
                 rating=rating,
                 review_text=review_text
+                
             )
             messages.success(request, "Your review has been submitted successfully.")
 
@@ -401,6 +422,7 @@ def book_description(request, book_id):
         'book': book,
         'reviews': reviews,
         'user_has_borrowed': user_has_borrowed,
+        'related_books': related_books
     })
 def memberview(request):
     if request.user.role != "Admin":

@@ -141,20 +141,37 @@
 								</li>
 								
 							</ul>
-							
-							<ul class="nav-menu nav-menu-social align-to-right">
-								
-								<li>
-									<a href="404.html#" class="alio_green" data-bs-toggle="modal" data-bs-target="#login">
-										<i class="fas fa-sign-in-alt me-1"></i><span class="dn-lg">Sign In</span>
+					
+							<ul class="nav-menu  align-to-right">
+								<li class="add-listing" style="display: inline-block; margin-right: 10px; background-color: #8B0000; padding: 5px; border-radius: 5px;">
+									<a href="{% url 'profile' %}" style="text-decoration: none; color: white; font-weight: bold; display: flex; align-items: center;">
+										{% if user.is_authenticated %}
+											<span style="margin-right: 5px;">{{ user }}</span>
+											{% if user.gender == "male" %}
+												<img src="{% static 'assets/images/boy.png' %}" style="width: 25px; height: 25px; object-fit: contain; border-radius: 50%;" alt="Boy Image" />
+											{% elif user.gender == "female" %}
+												<img src="{% static 'assets/images/woman.png' %}" style="width: 25px; height: 25px; object-fit: contain; border-radius: 50%;" alt="Woman Image" />
+											{% endif %}
+										{% endif %}
 									</a>
 								</li>
-								<li class="add-listing">
-									<a href="submit-property.html"  class="bg-danger">
-										 <i class="fas fa-plus-circle me-1"></i>Add Property
+								
+								
+							
+								<li class="add-listing" style="display: inline-block; margin-right: 10px;">
+									<a href="{% url 'logout' %}" style="text-decoration: none; color: black; font-weight: bold;">
+										<i class="fas fa-sign-in-alt me-2"></i><span>Log Out</span>
+									</a>
+								</li>
+							
+								<li class="add-listing" style="display: inline-block;">
+									<a href="https://www.flaticon.com/free-icons/notification" title="Notification icons" style="text-decoration: none;">
+										<img src="{% static 'assets/images/notification.png' %}" style="width: 25px; height: 25px; object-fit: contain; background: none; border: none;" alt="Notification Icon" />
 									</a>
 								</li>
 							</ul>
+							
+							
 						</div>
 					</nav>
 				</div>

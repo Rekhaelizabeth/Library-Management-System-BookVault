@@ -3,18 +3,18 @@
 {% block title %}Book Description{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Authors</h1>
+<div class="container my-5">
+    <h1 class="text-center mb-4">Authors</h1>
     <div class="row">
         {% for author in authors %}
-        <div class="col-md-4">
-            <a href="{% url 'books_by_author' author.id %}" class="btn btn-outline-primary btn-block">
+        <div class="col-md-4 mb-3 d-flex justify-content-center">
+            <a href="{% url 'books_by_author' author.id %}" 
+               class="btn text-dark fw-bold text-center" 
+               style="border: 2px solid red; padding: 15px 20px; border-radius: 8px; width: 100%; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
                 {{ author.first_name }} {{ author.last_name }}
             </a>
         </div>
         {% endfor %}
     </div>
 </div>
-
-
 {% endblock %}

@@ -1,98 +1,91 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Book Description{% endblock %}
+
+{% block content %}
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
-
-<div class="container">
-    <h2>Profile of {{ user.name }}</h2>
-
-    <!-- User Information Section -->
-    <div class="section">
-        <h3>User Information</h3>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">
+    <!-- User Profile Section -->
+    <div style="flex: 1; padding: 20px; background-color: #f9f9f9; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+        <h1>User Profile</h1>
+        <p><strong>Name:</strong> {{ user.name }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Phone:</strong> {{ user.phone }}</p>
-        
         <p><strong>Gender:</strong> {{ user.gender }}</p>
         <p><strong>Role:</strong> {{ user.role }}</p>
-        <p><strong>Status:</strong> {% if user.status %} Active {% else %} Inactive {% endif %}</p>
-        <div class="section">
-            <h3>Address Information</h3>
-            <p><strong>City:</strong> {{ address.city }}</p>
-            <p><strong>State:</strong> {{ address.state }}</p>
-            <p><strong>Zip Code:</strong> {{ address.postal_code }}</p>
-            <p><strong>Country:</strong> {{ address.country }}</p>
-        </div>
-        
-    </div>
 
-    <!-- Member Profile Section -->
-    <div class="section">
-        <h3>Member Profile</h3>
-        <p><strong>Membership Type:</strong> {{ member_profile.membership_type }}</p>
-        <p><strong>Membership Expiry:</strong> {{ member_profile.membership_expiry }}</p>
-        <p><strong>Borrowing Limit:</strong> {{ member_profile.borrowing_limit }}</p>
-        <p><strong>Outstanding Fines:</strong> ${{ member_profile.outstanding_fines }}</p>
-        <p><strong>Reserved Books Count:</strong> {{ member_profile.reserved_books_count }}</p>
-        <p><strong>Favorite Genres:</strong> {{ member_profile.favorite_genres }}</p>
+        <h3>Address:</h3>
+        {% if address %}
+            <p>{{ address.addressline }}, {{ address.city }}, {{ address.state }}, {{ address.country }} - {{ address.postal_code }}</p>
+        {% else %}
+            <p>No address available.</p>
+        {% endif %}
 
-        <p><strong>Subscription:</strong>
-            {% if member_profile.subscription %}
-                {{ member_profile.subscription }}
-            {% else %}
-                <a href="{% url 'list_subscriptions' %}" class="btn">No subscription. Click here to view available subscriptions.</a>
-            {% endif %}
-        </p>
+        <h3>Membership Profile:</h3>
+        {% if member_profile %}
+            <p><strong>Membership Type:</strong> {{ member_profile.membership_type }}</p>
+            <p><strong>Membership Expiry:</strong> {{ member_profile.membership_expiry }}</p>
+            <p><strong>Borrowing Limit:</strong> {{ member_profile.borrowing_limit }}</p>
+            <p><strong>Outstanding Fines:</strong> {{ member_profile.outstanding_fines }}</p>
+            <p><strong>Reserved Books Count:</strong> {{ member_profile.reserved_books_count }}</p>
+            <p><strong>Favorite Genres:</strong> {{ member_profile.favorite_genres }}</p>
+            <p><strong>Librarian Approved:</strong> {{ member_profile.libriarian_approved }}</p>
+        {% else %}
+            <p>No membership profile available.</p>
+        {% endif %}
+
+        <h3>Subscription:</h3>
+        {% if subscription_log %}
+            <p><strong>Plan Name:</strong> {{ subscription_log.subscription.plan_name }}</p>
+            <p><strong>Start Date:</strong> {{ subscription_log.start_date }}</p>
+            <p><strong>End Date:</strong> {{ subscription_log.end_date }}</p>
+        {% else %}
+            <p>No subscription available.</p>
+        {% endif %}
     </div>
 
     <!-- Membership Card Section -->
-    <div class="section">
+    <div style="flex: 1; padding: 20px;">
         <h3>Membership Card</h3>
         <div class="membership-card">
-            <p><strong>Membership ID:</strong> {{ member_profile.id }}</p>
-            <p><strong>Member Since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-            <p><strong>Expiry Date:</strong> {{ member_profile.membership_expiry|date:"F j, Y" }}</p>
-            {% if member_profile.membership_type %}
-                <p><strong>Membership Type:</strong> {{ member_profile.membership_type }}</p>
-            {% endif %}
-
+            {% if is_active_subscription %}
             <!-- Membership Card Design -->
             <div class="card">
-                <div style="width: 400px; height: 240px; border-radius: 10px; background-color: #0f2a34; position: relative; overflow: hidden; color: #fff; padding: 20px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);">
+                <div style="width: 100%; max-width: 400px; height: 240px; border-radius: 10px; background-color: #0f2a34; position: relative; overflow: hidden; color: #fff; padding: 20px; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);">
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/swirls.svg'); background-size: cover; opacity: 0.15;"></div>
-                    
-                    <!-- Brand Logo -->
-                    <!-- <div style="position: absolute; top: 10px; right: 20px; z-index: 1;">
-                        <img src="https://via.placeholder.com/80" alt="Brand Logo" style="width: 80px; height: 40px; object-fit: contain;">
-                    </div> -->
-                    
+
                     <!-- Member Details -->
                     <div style="max-width: 250px; position: absolute; top: 20px; left: 20px; z-index: 1;">
                         <h1 style="font-size: 24px; margin: 0; color: #f3f3f3;">{{ user.name }}</h1>
                         <p style="color: #ff8364; font-size: 16px; margin-top: 5px;">Membership ID: <b>{{ member_profile.id }}</b></p>
-                        <p style="color: #ffa849; font-size: 16px; margin-top: 5px;">{{ member_profile.subscription }}</p>
-                        <p style="margin: 10px 0; font-size: 14px;">{{ member_profile.membership_type }}</p>
-                        <!-- <p style="margin: 10px 0; font-size: 14px;">e.clark@gl-connections.com</p>
-                        <p style="margin: 10px 0; font-size: 14px;">+1 235 586 5208</p> -->
+                        <p style="color: #ffa849; font-size: 16px; margin-top: 5px;">
+                            {% if subscription_log %}
+                            {{ subscription_log.subscription.plan_name }} 
+                            {% else %}
+                                No Subscription
+                            {% endif %}
+                        </p>
+                        
+                        <p style="margin: 10px 0; font-size: 14px;">Membership Type: {{ member_profile.membership_type }}</p>
                     </div>
-                    
+
                     <!-- QR Code -->
                     <div style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%); text-align: center; z-index: 1;">
-                        <div style="width: 100px; height: 100px; background: #fff; border-radius: 8px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                        <div style="width: 130px; height: 130px; background: #fff; border-radius: 8px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
                             <img src="{% url 'generate_qr_code' %}" alt="QR Code" style="width: 90%; height: 90%;">
                         </div>
-                        
                         <p style="font-size: 12px; color: #ff8364; margin-top: 8px;">BookVault</p>
                     </div>
                 </div>
             </div>
-            
-                    
-          
-            </div>
+            {% else %}
+                <p>No active subscription to display a membership card.</p>
+            {% endif %}
         </div>
     </div>
 </div>
 
-
-
-
-
-
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

@@ -36,4 +36,5 @@ urlpatterns = [
     path('tagadmin_list/', views.tagadmin_list, name='tagadmin_list'),
     path('genreadmin_list/', views.genreadmin_list, name='genreadmin_list'),
     path('authoradmin_list/', views.authoradmin_list, name='authoradmin_list'),
+    path('bookadmin_list/', views.bookadmin_list, name='bookadmin_list'),
 ]

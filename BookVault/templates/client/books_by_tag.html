@@ -1,19 +1,60 @@
 {% extends "client/baseindexmember.html" %}
 
-{% block title %}Book Description{% endblock %}
+{% block title %}Books Under "{{ tag.name }}"{% endblock %}
 
 {% block content %}
-    <h1>Books under "{{ tag.name }}"</h1>
-    <ul>
-        {% for book in books %}
-            <li>
-                <strong>{{ book.title }}</strong> by {{ book.author.first_name }} {{ book.author.last_name }}
-                <p>{{ book.description }}</p>
-                <p><strong>Available Copies:</strong> {{ book.available_copies }}</p>
-            </li>
-        {% empty %}
-            <p>No books available under this tag.</p>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'tag_categorization' %}">Back to Tags</a>
-    {% endblock %}
+<div class="container my-5">
+    <!-- Header -->
+    <h1 class="text-center mb-4">Books under "{{ tag.name }}"</h1>
+
+    <!-- Books Section -->
+    <div class="row">
+        {% if books %}
+            {% for book in books %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <!-- Book Cover Image -->
+                    <img 
+                        src="{{ book.cover_image.url }}" 
+                        class="card-img-top" 
+                        alt="{{ book.title }}" 
+                        style="height: auto; width: 100%;"
+                    />
+                    <div class="card-body">
+                        <!-- Book Title -->
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        
+                        <!-- Book Author -->
+                        <p class="card-text">
+                            <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}
+                        </p>
+
+                        <!-- Full Book Description -->
+                        <p class="card-text">{{ book.description }}</p>
+
+                        <!-- Available Copies -->
+                        <p class="card-text">
+                            <strong>Available Copies:</strong> {{ book.available_copies }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Message if no books available -->
+            <div class="col-12 text-center">
+                <p class="text-danger">No books available under this tag.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Back to Tags Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'tag_categorization' %}" 
+           class="btn btn-danger" 
+           style="color: white; font-weight: bold;">
+            Back to Tags
+        </a>
+    </div>
+</div>
+{% endblock %}
