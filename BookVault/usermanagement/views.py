@@ -8,7 +8,7 @@ import qrcode
 from django.core.exceptions import PermissionDenied
 from io import BytesIO
 from book.models import Author,Genre,Book,Tag
-from .models import BookIssueTransaction, BookReservation, MemberSubscriptionLog, User, Address, MemberProfile, Subscription , Reviews
+from .models import BookIssueTransaction, BookReservation, MemberSubscriptionLog, User, Address, MemberProfile, Subscription , Reviews,Suggestion
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -518,3 +518,13 @@ def upload_membership_card(request):
             logging.error(f"Error occurred while uploading membership card: {str(e)}")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+@login_required
+def suggestion_view(request):
+    if request.method == "POST":
+        suggestion_text = request.POST.get('suggestion_text')
+        if suggestion_text:
+            Suggestion.objects.create(user=request.user, suggestion_text=suggestion_text)
+            return redirect('home')  # Redirect to a success page or back to the form
+
+    return render(request, 'client/suggestions.html')

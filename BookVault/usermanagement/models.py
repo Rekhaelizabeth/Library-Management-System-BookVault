@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import datetime, timedelta
 from django.utils import timezone
-
+from django.utils.timezone import now
 
 class Address(models.Model):
     id = models.AutoField(primary_key=True)
@@ -217,3 +217,12 @@ class Reviews(models.Model):
 
     def __str__(self):
         return f"Review by {self.user.username} for {self.book.title}"
+    
+
+class Suggestion(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    suggestion_text = models.TextField()
+    submitted_at = models.DateTimeField(default=now)
+
+    def __str__(self):
+        return f"Suggestion by {self.user.username} on {self.submitted_at}"
