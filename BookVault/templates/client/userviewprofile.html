@@ -1,0 +1,98 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Book Description{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Borrow Books</h2>
+    
+    {% if issue %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Book Title</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Penalties</th>
+                    <th>Status</th>
+                    <th>Issued By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in issue %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ transaction.book.title }}</td>
+                    <td>{{ transaction.issue_date }}</td>
+                    <td>{{ transaction.due_date }}</td>
+                    <td>
+                        {% if transaction.return_date %}
+                            {{ transaction.return_date }}
+                        {% else %}
+                            <span class="text-muted">Not Returned</span>
+                        {% endif %}
+                    </td>
+                    <td>${{ transaction.penalties }}</td>
+                    <td>
+                        <span class="badge {% if transaction.status == 'RETURNED' %}bg-success{% elif transaction.status == 'ISSUED' %}bg-primary{% elif transaction.status == 'LOST' or transaction.status == 'DAMAGED' %}bg-danger{% else %}bg-warning{% endif %}">
+                            {{ transaction.status }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if transaction.issuedby %}
+                            {{ transaction.issuedby.user.name }}
+                        {% else %}
+                            <span class="text-muted">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No book issue transactions found.</p>
+    {% endif %}
+</div>
+
+
+<div class="container mt-5">
+    <h2 class="mb-4">Reserved Books</h2>
+    
+    {% if reserve %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Book Title</th>
+                    <th>Reserve Date</th>
+                    <th>Cancel</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in reserve %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ transaction.book.title }}</td>
+                    <td>{{ transaction.reserved_date }}</td>
+                    <td><button>Cancel</button></td>
+                   
+                  
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted">No book issue transactions found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+

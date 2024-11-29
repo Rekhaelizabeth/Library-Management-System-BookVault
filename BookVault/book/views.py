@@ -1,7 +1,7 @@
 from datetime import timedelta
 from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
-from usermanagement.models import BookIssueTransaction, MemberProfile, User
+from usermanagement.models import BookIssueTransaction, MemberProfile, User,BookReservation
 from .models import Book
 from .models import Author, Genre, Book, Tag
 from django.contrib import messages
@@ -29,6 +29,27 @@ def issue_book(request):
     issue = BookIssueTransaction.objects.filter(status='Requested')
     print(issue)
     return render(request, 'libriarian/issue_book.html', {'issue': issue})
+
+
+@login_required
+def userviewprofile(request):
+    # Fetch all book issue transactions and reservations for the logged-in user
+    issue = BookIssueTransaction.objects.filter(user=request.user)
+    reserve = BookReservation.objects.filter(user=request.user)
+    
+    # Debugging statements for development (optional)
+    print(issue)
+    print(reserve)
+
+    # Combine both contexts into a single dictionary
+    context = {
+        'issue': issue,
+        'reserve': reserve
+    }
+
+    # Render the profile page with the combined context
+    return render(request, 'client/userviewprofile.html', context)
+
 
 def approve_book_request(request, transaction_id):
     transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)

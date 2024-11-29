@@ -37,4 +37,5 @@ urlpatterns = [
     path('genreadmin_list/', views.genreadmin_list, name='genreadmin_list'),
     path('authoradmin_list/', views.authoradmin_list, name='authoradmin_list'),
     path('bookadmin_list/', views.bookadmin_list, name='bookadmin_list'),
+    path('userviewprofile/', views.userviewprofile, name='userviewprofile'),
 ]

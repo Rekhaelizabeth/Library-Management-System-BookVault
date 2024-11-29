@@ -1,0 +1,20 @@
+<h1>Search Digital Books</h1>
+<form method="get" action="{% url 'search_digital_books' %}">
+    <input type="text" name="q" placeholder="Search for books..." value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+{% if books %}
+    <h2>Search Results:</h2>
+    {% for book in books %}
+        <div>
+            <h3>{{ book.title }}</h3>
+            <p>Author: {{ book.author }}</p>
+            <p>ISBN: {{ book.isbn }}</p>
+            <p>Year: {{ book.publication_year }}</p>
+            <a href="{{ book.digital_link }}" target="_blank">Read Online</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No books found. Try a different search query.</p>
+{% endif %}
