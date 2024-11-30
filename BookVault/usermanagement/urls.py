@@ -26,5 +26,10 @@ urlpatterns = [
     path('access-denied/', views.access_denied, name='access_denied'),
     path('upload_membership_card/', views.upload_membership_card, name='upload_membership_card'),
     path('suggestions/', views.suggestion_view, name='suggestions'),
+
+
+    
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('reset-password/<uidb64>/<token>/', views.reset_password, name='reset_password'),
     
 ]

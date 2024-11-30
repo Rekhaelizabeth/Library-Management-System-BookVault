@@ -528,3 +528,80 @@ def suggestion_view(request):
             return redirect('home')  # Redirect to a success page or back to the form
 
     return render(request, 'client/suggestions.html')
+
+
+
+
+#forgot password
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib import messages
+from django.template.loader import render_to_string
+
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            User = get_user_model()
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(str(user.pk).encode())
+
+            # Send reset email
+            reset_link = f'http://{get_current_site(request).domain}/reset-password/{uid}/{token}/'
+            message = render_to_string('client/password_reset_email.html', {
+                'user': user,
+                'reset_link': reset_link,
+            })
+            send_mail(
+                'Password Reset Request',
+                message,
+                'bookvault3@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+
+            # Success message and redirect to login page
+            messages.success(request, "We've sent you an email with a link to reset your password. Please check your inbox.")
+            return redirect('login')  # Redirect to login page
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+            return redirect('forgot_password')
+    return render(request, 'client/forgot_password.html')
+
+
+from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.forms import SetPasswordForm
+from django.shortcuts import render, redirect
+
+def reset_password(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = get_user_model().objects.get(pk=uid)
+        
+        # Check if the token is valid
+        if default_token_generator.check_token(user, token):
+            if request.method == 'POST':
+                form = SetPasswordForm(user, request.POST)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Your password has been reset successfully.")
+                    return redirect('login')  # Redirect to login page after password reset
+            else:
+                form = SetPasswordForm(user)
+            return render(request, 'client/reset_password.html', {'form': form})
+
+        else:
+            messages.error(request, "This link has expired or is invalid.")
+            return redirect('forgot_password')
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        messages.error(request, "Invalid reset link.")
+        return redirect('forgot_password')

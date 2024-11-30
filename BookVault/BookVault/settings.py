@@ -152,3 +152,18 @@ RAZOR_KEY_ID = 'rzp_test_SAE73pNhXjw2pC'
 RAZOR_KEY_SECRET = 'jDHj6W4dBaJ1yQPXcqR2Raqe'
 
 GOOGLE_BOOKS_API_KEY = 'AIzaSyApbNT6e5IUii_dXvq0ZXllFZTsKrdXbEc'
+
+
+
+# settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'bookvault3@gmail.com'
+EMAIL_HOST_PASSWORD = 'pqdjjnfaamctvqfg'
+DEFAULT_FROM_EMAIL = 'bookvault3@gmail.com'
+
+# settings.py
+AUTH_USER_MODEL = 'usermanagement.User'
+
