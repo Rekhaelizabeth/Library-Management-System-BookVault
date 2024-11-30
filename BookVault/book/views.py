@@ -1,6 +1,7 @@
 from datetime import timedelta
 from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
+from analytics.views import create_notification
 from usermanagement.models import BookIssueTransaction, MemberProfile, User,BookReservation
 from .models import Book
 from .models import Author, Genre, Book, Tag
@@ -120,9 +121,21 @@ def approve_bookreturn_request(request, transaction_id):
                 # Apply penalties based on the status
                 if new_status == 'DAMAGED':
                     transaction.penalties = 250.0
+                    create_notification(
+                        transaction.user,
+                        f"Your book '{transaction.book.title}' has been marked as DAMAGED. A penalty of $250 has been applied."
+                    )
              
                 else:
                     transaction.penalties = 0.0  # No penalties for 'RETURNED'
+                    book = transaction.book
+                    book.available_copies += 1  # Increase available copies by 1
+                    book.save()
+                    create_notification(
+                        transaction.user,
+                        f"Your book '{transaction.book.title}' has been successfully returned. Thank you!"
+                    )
+                    
                 
                 transaction.save()
                 messages.success(request, "Book return processed successfully.")

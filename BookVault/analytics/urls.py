@@ -8,6 +8,8 @@ urlpatterns = [
     path('adminbook_analytics/', views.adminbook_analytics, name='adminbook_analytics'),
     path('books_by_genre_analytics/', views.books_by_genre_analytics, name='books_by_genre_analytics'),
     path('books_by_author_analytics/', views.books_by_author_analytics, name='books_by_author_analytics'),
+    path('membernotifications/', views.membernotifications, name='membernotifications'),
+
     
   
     

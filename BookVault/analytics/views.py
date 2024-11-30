@@ -116,3 +116,26 @@ def books_by_author_analytics(request):
     }
 
     return render(request, 'admindashboard/books_by_author_analytics.html', context)
+
+from django.shortcuts import render
+from .models import Notification
+
+def user_notifications(request):
+    notifications = Notification.objects.filter(user=request.user, is_read=False)
+    return render(request, 'notifications.html', {'notifications': notifications})
+from django.http import JsonResponse
+from .models import Notification
+
+def mark_notification_read(request, notification_id):
+    notification = Notification.objects.get(id=notification_id, user=request.user)
+    notification.is_read = True
+    notification.save()
+    return JsonResponse({"status": "success"})
+
+def membernotifications(request):
+    # Get all notifications for the current user that are unread
+    notifications = Notification.objects.filter(user=request.user, is_read=False)
+    return render(request, 'client/membernotifications.html', {'notifications': notifications})
+def create_notification(user, message):
+    notification = Notification(user=user, message=message)
+    notification.save()
