@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Count
+from book.models import Author, Genre
 from usermanagement.models import Subscription,MemberSubscriptionLog,User
 
 # Create your views here.
@@ -78,3 +79,40 @@ def send_notification(request):
     
     # If not POST, just render the form
     return render(request, 'admindashboard/send_notification.html')
+
+
+def adminbook_analytics(request):
+    return render(request, 'admindashboard/adminbook_analytics.html')
+
+
+def books_by_genre_analytics(request):
+    books_by_genre = Genre.objects.annotate(book_count=Count('books')).order_by('-book_count')
+    
+    genre_labels = [genre.name for genre in books_by_genre]
+    genre_counts = [genre.book_count for genre in books_by_genre]
+
+    context = {
+        'genre_labels': genre_labels,
+        'genre_counts': genre_counts,
+    }
+
+    return render(request, 'admindashboard/books_by_genre_analytics.html', context)
+
+def books_by_author_analytics(request):
+    books_by_genre = Genre.objects.annotate(book_count=Count('books')).order_by('-book_count')
+    genre_labels = [genre.name for genre in books_by_genre]
+    genre_counts = [genre.book_count for genre in books_by_genre]
+
+    # Data for Books by Author
+    books_by_author = Author.objects.annotate(book_count=Count('books')).order_by('-book_count')[:10]
+    author_labels = [f"{author.first_name} {author.last_name}" for author in books_by_author]
+    author_counts = [author.book_count for author in books_by_author]
+
+    context = {
+        'genre_labels': genre_labels,
+        'genre_counts': genre_counts,
+        'author_labels': author_labels,
+        'author_counts': author_counts,
+    }
+
+    return render(request, 'admindashboard/books_by_author_analytics.html', context)

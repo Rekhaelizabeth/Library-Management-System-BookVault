@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Library Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Library Analytics</h1>
+
+    <h2>Books by Genre</h2>
+    <canvas id="booksByGenreChart" width="400" height="200"></canvas>
+    
+    <script>
+        // Data from Django context
+        const genreLabels = {{ genre_labels|safe }};
+        const genreCounts = {{ genre_counts|safe }};
+
+        // Create a bar chart
+        const ctx = document.getElementById('booksByGenreChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: genreLabels,
+                datasets: [{
+                    label: 'Number of Books',
+                    data: genreCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

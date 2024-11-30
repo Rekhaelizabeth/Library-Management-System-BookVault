@@ -590,7 +590,7 @@ def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
-            User = get_user_model()
+            # User = get_user_model()
             user = User.objects.get(email=email)
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(str(user.pk).encode())
@@ -618,7 +618,7 @@ def forgot_password(request):
     return render(request, 'client/forgot_password.html')
 
 
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.forms import SetPasswordForm
@@ -627,23 +627,23 @@ from django.shortcuts import render, redirect
 def reset_password(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = get_user_model().objects.get(pk=uid)
+        # user = get_user_model().objects.get(pk=uid)
         
         # Check if the token is valid
-        if default_token_generator.check_token(user, token):
-            if request.method == 'POST':
-                form = SetPasswordForm(user, request.POST)
-                if form.is_valid():
-                    form.save()
-                    messages.success(request, "Your password has been reset successfully.")
-                    return redirect('login')  # Redirect to login page after password reset
-            else:
-                form = SetPasswordForm(user)
-            return render(request, 'client/reset_password.html', {'form': form})
+        # if default_token_generator.check_token(user, token):
+        #     if request.method == 'POST':
+        #         form = SetPasswordForm(user, request.POST)
+        #         if form.is_valid():
+        #             form.save()
+        #             messages.success(request, "Your password has been reset successfully.")
+        #             return redirect('login')  # Redirect to login page after password reset
+        #     else:
+        #         form = SetPasswordForm(user)
+        #     return render(request, 'client/reset_password.html', {'form': form})
 
-        else:
-            messages.error(request, "This link has expired or is invalid.")
-            return redirect('forgot_password')
+        # else:
+        #     messages.error(request, "This link has expired or is invalid.")
+        return redirect('forgot_password')
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         messages.error(request, "Invalid reset link.")
         return redirect('forgot_password')

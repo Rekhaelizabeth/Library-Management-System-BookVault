@@ -72,25 +72,24 @@
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
                         {% if book.cover_image %}
-                            <img src="{{ book.cover_image.url }}" alt="Cover Image of {{ book.title }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                        <img 
+                        src="{{ book.cover_image.url }}" 
+                        alt="Cover Image of {{ book.title }}" 
+                        class="card-img-top" 
+                        style="height: 500px; width: 100%; object-fit: cover;">
+                    
                         {% else %}
                             {% comment %} <img src="{% static 'images/placeholder.png' %}" alt="No Cover Image Available" class="card-img-top" style="height: 250px; object-fit: cover;"> {% endcomment %}
                         {% endif %}
                         <div class="card-body">
                             <h5><a href="{% url 'book_description' book.id %}">{{ book.title }}</a></h5>
                             <p class="card-text">
+                                <strong>ISBN:</strong> {{ book.isbn}}<br>
                                 <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
-                                <strong>Publisher:</strong> {{ book.publisher }}<br>
-                                <strong>Year:</strong> {{ book.publication_year }}<br>
-                                <strong>Genre:</strong> {{ book.genre.name }}<br>
+                            
                                 <strong>Available copies:</strong> {{ book.available_copies}}<br>
 
-                                <strong>Status:</strong> 
-                                {% if book.status %}
-                                    <span class="text-success">Available</span>
-                                {% else %}
-                                    <span class="text-danger">Not Available</span>
-                                {% endif %}
+                               
                             </p>
                             <div class="text-center mt-3">
                                 <div class="d-inline-block border p-3 rounded bg-light">
