@@ -1,21 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suggestions</title>
-</head>
-<body>
-    <div class="container mt-4">
-        <h2>Submit a Suggestion</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="suggestion_text">Your Suggestion</label>
-                <textarea id="suggestion_text" name="suggestion_text" rows="5" class="form-control" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
-        </form>
-    </div>
-</body>
-</html>
+
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Books Page{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Submit a Suggestion</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="suggestion_text">Your Suggestion</label>
+            <textarea id="suggestion_text" name="suggestion_text" rows="5" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Submit</button>
+    </form>
+</div
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}
+
+
+

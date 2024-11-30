@@ -35,14 +35,21 @@
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required oninput="validateEmail()">
                     <label for="email" class="form-label">Email</label>
+                    <small id="emailError" style="color: red; display: none;">
+                      Please enter a valid email address.
+                    </small>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required   oninput="validatePassword()"
+                    />
                     <label for="password" class="form-label">Password</label>
+                    <small id="passwordError" style="color: red; display: none;">
+                      Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.
+                    </small>
                   </div>
                 </div>
                 <div class="row">
@@ -102,3 +109,34 @@
 
 <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/registrations/registration-9/assets/css/styles.css">
+
+<script>
+  function validateEmail() {
+    const emailField = document.getElementById("email");
+    const emailError = document.getElementById("emailError");
+
+    // Basic email validation regex
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!regex.test(emailField.value)) {
+      emailError.style.display = "block"; // Show error message
+    } else {
+      emailError.style.display = "none"; // Hide error message
+    }
+  }
+
+  function validatePassword() {
+    const passwordField = document.getElementById("password");
+    const passwordError = document.getElementById("passwordError");
+
+    // Regular expression to validate password requirements
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    // Check if the password matches the regex
+    if (!regex.test(passwordField.value)) {
+      passwordError.style.display = "block"; // Show error message
+    } else {
+      passwordError.style.display = "none"; // Hide error message
+    }
+  }
+</script>

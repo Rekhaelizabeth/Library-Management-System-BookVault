@@ -48,59 +48,84 @@
                <form method="POST">
                 {% csrf_token %}
                 <div class="row gy-3 overflow-hidden">
+
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+                      <input type="text" class="form-control" name="name" id="name" placeholder="Name" required oninput="validateName()">
                       <label for="name" class="form-label">Name</label>
+                      <small id="nameError" style="color: red; display: none;">Only letters and spaces are allowed.</small>
                     </div>
                   </div>
+
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="addressline" id="addressline" placeholder="Address" required>
+                      <input type="text" class="form-control" name="addressline" id="addressline" placeholder="Address" required oninput="validateAddress()" >
                       <label for="addressline" class="form-label">Address</label>
+                      <small id="addressError" style="color: red; display: none;">Invalid characters. Only letters, numbers, spaces, commas, periods, and dashes are allowed.</small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                      <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required oninput="validateEmail()">
                       <label for="email" class="form-label">Email</label>
+                      <small id="emailError" style="color: red; display: none;">
+                        Please enter a valid email address (e.g., name@example.com).
+                      </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                       <input type="text" class="form-control" name="city" id="city" placeholder="City" required>
+                       <input type="text" class="form-control" name="city" id="city" placeholder="City" required oninput="validateCity()">
                       <label for="city" class="form-label">City</label>
+                      <small id="cityError" style="color: red; display: none;">
+                        Only letters and spaces are allowed.
+                      </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+                        <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required oninput="validatePassword()">
                       <label for="password" class="form-label">Password</label>
+                      <small id="passwordError" style="color: red; display: none;">
+                        Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.
+                      </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="state" id="state" placeholder="State" required>
+                      <input type="text" class="form-control" name="state" id="state" placeholder="State" required oninput="validateState()">
                       <label for="state" class="form-label">State</label>
+                      <small id="stateError" style="color: red; display: none;">
+                        Only letters and spaces are allowed.
+                      </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="number" id="number" placeholder="Phone Number" required>
-                      <label for="number" class="form-label">Phone Number</label>
+                      <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number" required oninput="validatePhoneNumber()">
+                      <label for="phone" class="form-label">Phone Number</label>
+                      <small id="phoneError" style="color: red; display: none;">
+                        Phone Number must be exactly 10 digits.
+                      </small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="country" id="country" placeholder="Country" required>
+                      <input type="text" class="form-control" name="country" id="country" placeholder="Country" required oninput="validateCountry()">
                       <label for="country" class="form-label">Country</label>
+                      <small id="countryError" style="color: red; display: none;">
+                        Only letters and spaces are allowed.
+                      </small>
                     </div>
                   </div>
                   
                   <div class="col-6">
                     <div class="form-floating mb-3">
-                      <input type="text" class="form-control" name="postal_code" id="postal_code" placeholder="pincode" required>
+                      <input type="text" class="form-control" name="postal_code" id="postal_code" placeholder="pincode" required  oninput="validatePostalCode()">
                       <label for="postal_code" class="form-label">Pin Code</label>
+                      <small id="postalCodeError" style="color: red; display: none;">
+                        Pin Code must be exactly 6 digits and contain only numbers.
+                      </small>
                     </div>
                   </div>
                   <div class="d-flex justify-content-center align-items-center flex-column">
@@ -178,3 +203,109 @@
   </section>
   <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://unpkg.com/bs-brain@2.0.4/components/registrations/registration-9/assets/css/registration-9.css">
+
+<script>
+  function validateName() {
+    const nameField = document.getElementById("name");
+    const nameError = document.getElementById("nameError");
+    const regex = /^[A-Za-z\s]*$/; // Allows only letters and spaces
+
+    if (!regex.test(nameField.value)) {
+      nameError.style.display = "block"; // Show error message
+    } else {
+      nameError.style.display = "none"; // Hide error message
+    }
+  }
+
+  function validateAddress() {
+    const addressField = document.getElementById("addressline");
+    const addressError = document.getElementById("addressError");
+    const regex = /^[A-Za-z0-9\s,.-]*$/; // Allows letters, numbers, spaces, commas, periods, and dashes
+
+    if (!regex.test(addressField.value)) {
+      addressError.style.display = "block"; // Show error message
+    } else {
+      addressError.style.display = "none"; // Hide error message
+    }
+  }
+
+  function validateEmail() {
+    const emailField = document.getElementById("email");
+    const emailError = document.getElementById("emailError");
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email format validation
+
+    if (!regex.test(emailField.value)) {
+      emailError.style.display = "block"; // Show error message
+    } else {
+      emailError.style.display = "none"; // Hide error message
+    }
+  }
+
+  function validatePostalCode() {
+    const postalCodeField = document.getElementById("postal_code");
+    const postalCodeError = document.getElementById("postalCodeError");
+    const regex = /^[0-9]{6}$/; // Exactly 6 digits
+
+    if (!regex.test(postalCodeField.value)) {
+      postalCodeError.style.display = "block"; // Show error message
+    } else {
+      postalCodeError.style.display = "none"; // Hide error message
+    }
+  }
+
+  function validatePhoneNumber() {
+    const phoneField = document.getElementById("phone");
+    const phoneError = document.getElementById("phoneError");
+    const regex = /^[0-9]{10}$/; // Exactly 10 digits
+
+    if (!regex.test(phoneField.value)) {
+      phoneError.style.display = "block"; // Show error message
+    } else {
+      phoneError.style.display = "none"; // Hide error message
+    }
+  }
+  function validatePassword() {
+    const passwordField = document.getElementById("password");
+    const passwordError = document.getElementById("passwordError");
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!regex.test(passwordField.value)) {
+      passwordError.style.display = "block"; // Show error message
+    } else {
+      passwordError.style.display = "none"; // Hide error message
+    }
+  }
+  function validateCountry() {
+    const countryField = document.getElementById("country");
+    const countryError = document.getElementById("countryError");
+    const regex = /^[a-zA-Z\s]*$/;
+
+    if (!regex.test(countryField.value)) {
+      countryError.style.display = "block"; // Show error message
+    } else {
+      countryError.style.display = "none"; // Hide error message
+    }
+  }
+  function validateState() {
+    const stateField = document.getElementById("state");
+    const stateError = document.getElementById("stateError");
+    const regex = /^[a-zA-Z\s]*$/;
+
+    if (!regex.test(stateField.value)) {
+      stateError.style.display = "block"; // Show error message
+    } else {
+      stateError.style.display = "none"; // Hide error message
+    }
+  }
+  function validateCity() {
+    const cityField = document.getElementById("city");
+    const cityError = document.getElementById("cityError");
+    const regex = /^[a-zA-Z\s]*$/; // Regex for letters and spaces only
+
+    if (!regex.test(cityField.value)) {
+      cityError.style.display = "block"; // Show error message
+    } else {
+      cityError.style.display = "none"; // Hide error message
+    }
+  }
+</script>
