@@ -323,7 +323,7 @@ def borrow_book(request, book_id):
     
     # Get the borrowing limit for that user
     borrowing_limit = member_profile.borrowing_limit
-    return_date = timezone.now() + timedelta(days=borrowing_limit)
+
     print(borrowing_limit)
     print("helloo")
     print(book)
@@ -333,7 +333,6 @@ def borrow_book(request, book_id):
         transaction = BookIssueTransaction.objects.create(
             book=book,
             user=user,
-            return_date=return_date,
             status='Requested',
             
 
@@ -353,6 +352,49 @@ def borrow_book(request, book_id):
     
     return redirect('home')  # Redirect to the book list or another page
 
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.timezone import now
+from django.contrib import messages
+from .models import BookIssueTransaction
+
+def return_book(request, transaction_id):
+    # Fetch the specific transaction
+    transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+    
+    if transaction.status == 'ISSUED':  # Ensure the book is issued
+        transaction.return_date = now().date()  # Set the return date to today
+        # transaction.status = 'RETURNED'  # Update status
+        transaction.bookreturn = True
+        
+        # Calculate penalties if applicable
+        if transaction.return_date > transaction.due_date:
+            overdue_days = (transaction.return_date - transaction.due_date).days
+            transaction.penalties = overdue_days * 1.5  # Example penalty: $1.5/day
+        
+        transaction.save()  # Save changes
+        
+        messages.success(request, f"The book '{transaction.book.title}' has been successfully returned.")
+    else:
+        messages.error(request, "This book cannot be returned.")
+    
+    return redirect('userviewprofile')  # Redirect to the borrowing list page
+
+#lost_book
+
+def lost_book(request, transaction_id):
+    # Fetch the specific transaction
+    transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+    
+    if transaction.status == 'ISSUED':  # Ensure the book is issued
+
+        transaction.reportlostbook = True
+        transaction.penalties = 500
+        
+        transaction.save()  
+    else:
+        messages.error(request, "This book cannot be returned.")
+    
+    return redirect('userviewprofile')  # Redirect to the borrowing list page
 def reserve_book(request, book_id):
     if request.user.role != "Member":
        return redirect("error403")

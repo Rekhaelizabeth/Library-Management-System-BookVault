@@ -31,6 +31,19 @@ def issue_book(request):
     return render(request, 'libriarian/issue_book.html', {'issue': issue})
 
 
+
+def librairianlost_book(request):
+    issue = BookIssueTransaction.objects.filter(reportlostbook=True)
+    print(issue)
+    return render(request, 'libriarian/librairianlost_book.html', {'issue': issue})
+
+def librairianreturn_book(request):
+    returnbook = BookIssueTransaction.objects.filter(bookreturn=True)
+    print(returnbook)
+    return render(request, 'libriarian/return_book.html', {'returnbook': returnbook})
+
+from django.utils.timezone import now
+
 @login_required
 def userviewprofile(request):
     # Fetch all book issue transactions and reservations for the logged-in user
@@ -44,7 +57,8 @@ def userviewprofile(request):
     # Combine both contexts into a single dictionary
     context = {
         'issue': issue,
-        'reserve': reserve
+        'reserve': reserve,
+        'today': now().date(),  # Add today's date
     }
 
     # Render the profile page with the combined context
@@ -57,7 +71,7 @@ def approve_book_request(request, transaction_id):
     
     # Get the borrowing limit for that user
     borrowing_limit = member_profile.borrowing_limit
-    return_date = timezone.now() + timedelta(days=borrowing_limit)
+    
     print(borrowing_limit)
     print(f"Transaction ID: {transaction_id}")
     print(f"User: {transaction.user.name}, Borrowing Limit: {borrowing_limit}, status: {transaction.status}")
@@ -65,7 +79,7 @@ def approve_book_request(request, transaction_id):
         # Update the status to 'ISSUED'
         transaction.status = 'ISSUED'
         transaction.issue_date = timezone.now() 
-        transaction.return_date = return_date
+        
     
         transaction.issuedby = LibrarianProfile.objects.get(user=request.user)
         print(f"User: {transaction.issuedby.user.name}, Borrowing Limit: {borrowing_limit}")
@@ -76,6 +90,51 @@ def approve_book_request(request, transaction_id):
 
         return redirect('issue_book')
     return redirect('issue_book')  # Or show an error message if necess
+
+def approve_lostbook_request(request, transaction_id):
+    transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+
+    if transaction.status == 'ISSUED':
+        # Update the status to 'ISSUED'
+        transaction.status = 'LOST'
+        transaction.reportlostbook = None
+        transaction.penalties = 500.0
+        transaction.save()
+    
+
+        return redirect('librairianlost_book')
+    return redirect('librairianlost_book')  # Or show an error message if necess
+
+
+def approve_bookreturn_request(request, transaction_id):
+    transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+    
+    if transaction.bookreturn:
+        if request.method == 'POST':
+            # Fetch the status from the form
+            new_status = request.POST.get('status')
+            
+            if new_status in ['DAMAGED',  'RETURNED']:
+                transaction.status = new_status
+                transaction.bookreturn = None
+                # Apply penalties based on the status
+                if new_status == 'DAMAGED':
+                    transaction.penalties = 250.0
+             
+                else:
+                    transaction.penalties = 0.0  # No penalties for 'RETURNED'
+                
+                transaction.save()
+                messages.success(request, "Book return processed successfully.")
+                return redirect('return_book')  # Redirect to the desired page
+            else:
+                messages.error(request, "Invalid status selected.")
+        else:
+            # Display the form to update book status
+            return render(request, 'libriarian/approve_return.html', {'transaction': transaction})
+    
+    messages.error(request, "This book has not been marked for return.")
+    return redirect('issue_book')
 
 def approve_member(request, user_id):
     user = get_object_or_404(User, id=user_id)

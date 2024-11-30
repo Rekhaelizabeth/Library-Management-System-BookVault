@@ -26,6 +26,9 @@ urlpatterns = [
     path('access-denied/', views.access_denied, name='access_denied'),
     path('upload_membership_card/', views.upload_membership_card, name='upload_membership_card'),
     path('suggestions/', views.suggestion_view, name='suggestions'),
+    path('return-book/<int:transaction_id>/', views.return_book, name='return_book'),
+    path('lost_book/<int:transaction_id>/', views.lost_book, name='lost_book'),
+
 
 
     

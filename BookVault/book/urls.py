@@ -24,8 +24,11 @@ urlpatterns = [
     path('member_list/', views.member_list, name='member_list'),
     path('approve_member/<int:user_id>', views.approve_member, name='approve_member'),
     path('issue_book/', views.issue_book, name='issue_book'),
-    path('approve_book_request/<int:transaction_id>/', views.approve_book_request, name='approve_book_request'),  # Approve request view
-
+    path('approve_book_request/<int:transaction_id>/', views.approve_book_request, name='approve_book_request'), 
+    path('approve_bookreturn_request/<int:transaction_id>/', views.approve_bookreturn_request, name='approve_bookreturn_request'), 
+    path('approve_lostbook_request/<int:transaction_id>/', views.approve_lostbook_request, name='approve_lostbook_request'),  # Approve request view
+    
+    
     path('tag_categorization/', views.tag_categorization, name='tag_categorization'),
     path('tag_categorization/<int:tag_id>/books/', views.books_by_tag, name='books_by_tag'),
 
@@ -38,4 +41,7 @@ urlpatterns = [
     path('authoradmin_list/', views.authoradmin_list, name='authoradmin_list'),
     path('bookadmin_list/', views.bookadmin_list, name='bookadmin_list'),
     path('userviewprofile/', views.userviewprofile, name='userviewprofile'),
+    path('librairianreturn_book/', views.librairianreturn_book, name='return_book'),
+    path('librairianlost_book/', views.librairianlost_book, name='librairianlost_book'),
+
 ]

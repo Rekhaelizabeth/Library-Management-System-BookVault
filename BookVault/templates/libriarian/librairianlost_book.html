@@ -1,0 +1,187 @@
+{% extends "libriarian/baseindex.html" %}
+
+{% block title %}Books Page{% endblock %}
+
+{% block content %}
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Book Issue
+</h1>
+
+                        <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
+                            <a href="index.html#" class="text-gray-600 hover:underline">
+                                Pages
+                            </a>
+
+                            <span class="mx-1 text-gray-500"> /
+                            </span>
+
+                            <a href="index.html#" class="text-indigo-600 hover:underline">
+                                    Dashboard
+                            </a>
+                            
+                        </div>
+                        
+                    </div>
+                    <!-- Right Content -->
+                    
+                </div>
+
+                    <div class="mt-6">
+                        <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
+        <div>
+            <p class="font-medium text-gray-500">Today’s Money</p>
+
+            <div class="flex items-end">
+                <h2 class="mt-1 text-2xl font-medium text-gray-800">$53,000</h2>
+                <span class="mx-2 text-indigo-500">
+                    +55%
+                </span>
+            </div>
+        </div>
+
+        <div class="p-2 text-white bg-indigo-500 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
+        <div>
+            <p class="font-medium text-gray-500">Today’s Users</p>
+
+            <div class="flex items-end">
+                <h2 class="mt-1 text-2xl font-medium text-gray-800">2,300</h2>
+                <span class="mx-2 text-indigo-500">
+                    +5%
+                </span>
+            </div>
+        </div>
+
+        <div class="p-2 text-white bg-indigo-500 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
+        <div>
+            <p class="font-medium text-gray-500">New Clients</p>
+
+            <div class="flex items-end">
+                <h2 class="mt-1 text-2xl font-medium text-gray-800">+3,052</h2>
+                <span class="mx-2 text-red-500">
+                    -14%
+                </span>
+            </div>
+        </div>
+
+        <div class="p-2 text-white bg-indigo-500 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
+        <div>
+            <p class="font-medium text-gray-500">Total Sales</p>
+
+            <div class="flex items-end">
+                <h2 class="mt-1 text-2xl font-medium text-gray-800">$89,000</h2>
+                <span class="mx-2 text-indigo-500">
+                    +8%
+                </span>
+            </div>
+        </div>
+
+        <div class="p-2 text-white bg-indigo-500 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="mt-6 space-y-6 xl:flex xl:space-y-0 xl:-mx-3">
+    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-2/3 xl:p-6">
+        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Book List</h2>
+        
+        <p class="flex items-center mt-2 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+    
+            <span class="mx-2">30 done this month</span>
+        </p>
+        <div class="container mt-4">
+            <h2>Books Available for Issue</h2>
+            <h4>Librarian: {{ librarian.user.username }}</h4>
+            
+            <!-- Loop through the available books -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Member Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in issue %}
+                    <tr>
+                        <td>{{ i.book.title }}</td>
+                        <td>{{ i.user.name }}</td>
+                        <td>
+                            <!-- Button to issue the book -->
+                            <a href="{% url 'approve_lostbook_request' i.id %}" class="btn btn-success">Approve</a>
+                     
+                            {% comment %} <a href="{% url 'book:issue_book_action' book.id %}" class="btn btn-primary">Issue Book</a> {% endcomment %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No books available for issue.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="flex flex-col mt-8">
+            <div class="overflow-x-auto">
+                <div class="inline-block min-w-full align-middle">
+                    <div class="overflow-hidden">
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                     
+                        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+                      
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-1/3 xl:p-6">
+        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Orders overview</h2>
+        
+        <p class="mt-2 text-gray-500">
+            <span class="text-green-500">+30%</span>&nbsp;this month
+        </p>
+
+        <div class="flow-root mt-6">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

@@ -168,8 +168,8 @@ class BookIssueTransaction(models.Model):
     return_date = models.DateField(null=True, blank=True)
     returnExtensionDate = models.IntegerField(null=True)
     penalties = models.FloatField(default=0.0)
-
-
+    bookreturn = models.BooleanField(null=True,blank=True)
+    reportlostbook = models.BooleanField(null=True,blank=True)
     due_date = models.DateField(default=timezone.now() + timedelta(days=14))  # Assuming 2-week loan period
     status_choices = [
         ('ISSUED', 'Issued'),
@@ -185,6 +185,7 @@ class BookIssueTransaction(models.Model):
         blank=True,  # Allow this field to be left blank in forms
         null=True     # Allow this field to be NULL in the database
     )
+
 
     def str(self):
         return f"Book: {self.book.title}, Issued to: {self.user.username}, Due: {self.due_date}"

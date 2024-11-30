@@ -19,6 +19,7 @@
                     <th>Penalties</th>
                     <th>Status</th>
                     <th>Issued By</th>
+                    <th>Book Return</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,6 +49,37 @@
                             <span class="text-muted">N/A</span>
                         {% endif %}
                     </td>
+              
+                    <td>
+                        {% if transaction.status == 'ISSUED' %}
+                        {% if transaction.bookreturn == True %}
+                        Waiting for approval of return from librarian
+                        {% else %}
+
+                        
+                            <form action="{% url 'return_book' transaction.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Return Book</button>
+                                
+                            </form>
+                            <a href="{% url 'lost_book' transaction.id %}">Report Book Lost</a>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">
+                                {% if transaction.status == 'REQUESTED' %}
+                                    Requested
+                                    {% elif transaction.status == 'RETURNED' %}
+                                    Returned on {{transaction.return_date}}
+                                {% else %}
+                                    {{ transaction.return_date|default:"Yet to be issued" }}
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                        
+                    </td>
+                    
+                    
+                    
                 </tr>
                 {% endfor %}
             </tbody>

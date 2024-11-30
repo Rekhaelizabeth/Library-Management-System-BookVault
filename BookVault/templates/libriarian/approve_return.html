@@ -1,0 +1,20 @@
+{% extends "libriarian/baseindex.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Approve Book Return</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="status">Book Status:</label>
+            <select name="status" id="status" class="form-control">
+                <option value="RETURNED">Returned</option>
+                <option value="DAMAGED">Damaged</option>
+          
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Approve</button>
+    </form>
+</div>
+{% endblock %}
