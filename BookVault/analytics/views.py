@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 from book.models import Author, Book, Genre
-from usermanagement.models import Subscription,MemberSubscriptionLog,User
+from usermanagement.models import BookIssueTransaction, Subscription,MemberSubscriptionLog,User
 from .utils import fetch_google_books_metadata
 from django.core.mail import EmailMessage
 from django.conf import settings 
@@ -145,3 +145,56 @@ def update_copies_post(request, book_id):
         except ValueError as e:
             messages.error(request, f"Error: {e}")
     return redirect('inventory')
+
+from django.db.models import Sum
+
+def penalty(request):
+    # Get all transactions for the current user with penalties greater than 0.0
+    penalty_transactions = BookIssueTransaction.objects.filter(user=request.user, penalties__gt=0.0)
+    
+    # Calculate the sum of all penalties for that user
+    total_penalty = penalty_transactions.aggregate(Sum('penalties'))['penalties__sum'] or 0.0
+    total_penalty_paise=total_penalty*100
+    
+    # Pass both the penalty transactions and the total penalty to the template
+    return render(request, 'client/pay_penalty.html', {
+        'penalty': penalty_transactions,
+        'total_penalty': total_penalty,
+        'total_penalty_paise':total_penalty_paise
+    })
+import razorpay
+from django.conf import settings
+from django.shortcuts import render
+from django.http import JsonResponse
+
+def pay_penalty(request):
+    # Get all penalty transactions for the user with penalties greater than 0.0
+    penalty_transactions = BookIssueTransaction.objects.filter(user=request.user, penalties__gt=0.0)
+    
+    # Calculate the sum of all penalties
+    total_penalty = penalty_transactions.aggregate(Sum('penalties'))['penalties__sum'] or 0.0
+    
+    # Initialize Razorpay client
+    client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
+    # Create a Razorpay order (this could be based on the total penalty)
+    if total_penalty > 0:
+        order_amount = int(total_penalty * 100)  # Amount in paise (1 INR = 100 paise)
+        order_currency = 'INR'
+        
+        order = client.order.create(dict(
+            amount=order_amount,
+            currency=order_currency,
+            payment_capture='1'  # Capture the payment automatically
+        ))
+        BookIssueTransaction.objects.filter(user=request.user, penalties__gt=0.0).update(penalty_paid=True)
+        # Pass the Razorpay order ID to the template
+        razorpay_key = settings.RAZOR_KEY_ID
+        return render(request, 'client/pay_penalty.html', {
+            'penalty': penalty_transactions,
+            'total_penalty': total_penalty,
+            'razorpay_key': razorpay_key,
+            'order_id': order['id']
+        })
+    else:
+        return render(request, 'client/pay_penalty.html', {'penalty': penalty_transactions, 'total_penalty': total_penalty})

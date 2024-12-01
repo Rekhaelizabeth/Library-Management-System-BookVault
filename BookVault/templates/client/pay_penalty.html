@@ -1,0 +1,80 @@
+<h3>Total Penalty: {{ total_penalty }}</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>User</th>
+            <th>Issue Date</th>
+            <th>Return Date</th>
+            <th>Return Extension Date</th>
+            <th>Penalties</th>
+            <th>Book Return Status</th>
+            <th>Lost Book Reported</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Penalty Paid</th>
+            <th>Issued By</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in penalty %}
+        <tr>
+            <td>{{ transaction.book.title }}</td>
+            <td>{{ transaction.user.username }}</td>
+            <td>{{ transaction.issue_date }}</td>
+            <td>{{ transaction.return_date }}</td>
+            <td>{{ transaction.returnExtensionDate }}</td>
+            <td>{{ transaction.penalties }}</td>
+            <td>{{ transaction.bookreturn }}</td>
+            <td>{{ transaction.reportlostbook }}</td>
+            <td>{{ transaction.due_date }}</td>
+            <td>{{ transaction.status }}</td>
+            <td>{{ transaction.penalty_paid }}</td>
+            <td>{{ transaction.issuedby }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="12">No transactions found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Razorpay Payment Button -->
+{% if total_penalty > 0 %}
+    <button id="pay_button">Pay Now</button>
+{% endif %}
+
+<!-- Razorpay Script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    document.getElementById('pay_button').onclick = function(e) {
+        e.preventDefault();
+
+        var options = {
+            "key": "{{ razorpay_key }}",  // Replace with your Razorpay API key
+            "amount": "{{ total_penalty_paise }}",  // Correct format, amount in paise (1 INR = 100 paise)
+            "currency": "INR",
+            "name": "Library Penalty Payment",
+            "description": "Pay penalty for overdue books",
+            "image": "https://example.com/your-logo.png",  // Optional logo
+            "handler": function (response) {
+                // Handle payment success
+                alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
+                // Optionally, you can send the payment details to your backend here
+                window.location.href = "/payment-success/" + response.razorpay_payment_id;  // Redirect to a success page
+            },
+            "prefill": {
+                "name": "{{ request.user.username }}",  // Prefill user name
+                "email": "{{ request.user.email }}"  // Prefill user email
+            },
+            "theme": {
+                "color": "#F37254"  // Optional theme color
+            }
+        };
+
+        var rzp = new Razorpay(options);
+        rzp.open();
+    };
+</script>

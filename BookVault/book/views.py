@@ -88,34 +88,51 @@ def approve_lostbook_request(request, transaction_id):
 
 def approve_bookreturn_request(request, transaction_id):
     transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
+    
     if transaction.bookreturn:
         if request.method == 'POST':
+            # Fetch the status from the form
             new_status = request.POST.get('status')
+            
             if new_status in ['DAMAGED',  'RETURNED']:
                 transaction.status = new_status
                 transaction.bookreturn = None
+                # Apply penalties based on the status
                 if new_status == 'DAMAGED':
                     transaction.penalties = 250.0
                     create_notification(
                         transaction.user,
-                        f"Your book '{transaction.book.title}' has been marked as DAMAGED. A penalty of $250 has been applied."
+                        f"Your book '{transaction.book.title}' has been marked as DAMAGED. A penalty of {transaction.penalties} has been applied."
                     )
+             
                 else:
-                    transaction.penalties = 0.0  
-                    book = transaction.book
-                    book.available_copies += 1 
-                    book.save()
-                    create_notification(
+                    if transaction.return_date > transaction.due_date:
+                        overdue_days = (transaction.return_date - transaction.due_date).days
+                        transaction.penalties = overdue_days * 10  
+                        create_notification(
+                        transaction.user,
+                        f"Your book '{transaction.book.title}' has been marked as RETURNED. A penalty of {transaction.penalties} has been applied."
+                    )
+                    else:
+                        transaction.penalties = 0.0  # No penalties for 'RETURNED' if on time
+                        create_notification(
                         transaction.user,
                         f"Your book '{transaction.book.title}' has been successfully returned. Thank you!"
                     )
+
+                    book = transaction.book
+                    book.available_copies += 1  # Increase available copies by 1
+                    book.save()
+                    
                 transaction.save()
                 messages.success(request, "Book return processed successfully.")
-                return redirect('return_book') 
+                return redirect('return_book')  # Redirect to the desired page
             else:
                 messages.error(request, "Invalid status selected.")
         else:
+            # Display the form to update book status
             return render(request, 'libriarian/approve_return.html', {'transaction': transaction})
+    
     messages.error(request, "This book has not been marked for return.")
     return redirect('issue_book')
 
@@ -373,4 +390,23 @@ def bookadmin_list(request):
     return render(request, 'admindashboard/bookadmin_list.html', {'books': books})
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from usermanagement.models import BookReservation
+
+@login_required
+def cancel_reservation(request, reservation_id):
+    # Get the reservation object or return 404 if not found
+    reservation = get_object_or_404(BookReservation, id=reservation_id, user=request.user)
+    
+    # Update the status to 'canceled'
+    reservation.status = 'canceled'
+    reservation.save()
+    
+    # Display a success message
+    messages.success(request, f"Reservation for '{reservation.book.title}' has been canceled.")
+    
+    # Redirect back to the reserved books page
+    return redirect('userviewprofile')  # Replace with your URL name for the reserved books page
 

@@ -10,5 +10,7 @@ urlpatterns = [
     path('books_by_author_analytics/', views.books_by_author_analytics, name='books_by_author_analytics'),
     path('membernotifications/', views.membernotifications, name='membernotifications'),
     path('inventory/', views.inventory, name='inventory'),
-    path('update_copies_post/<int:book_id>/', views.update_copies_post, name='update_copies_post'),   
+    path('update_copies_post/<int:book_id>/', views.update_copies_post, name='update_copies_post'),  
+    path('penalty/', views.penalty, name='penalty'),
+    path('pay_penalty/', views.pay_penalty, name='pay_penalty'), 
 ]

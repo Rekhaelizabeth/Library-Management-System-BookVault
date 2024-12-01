@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="mb-4">Borrow Books</h2>
-    
+    <a href="{% url 'penalty' %}">Penalities</a>
     {% if issue %}
     <div class="table-responsive">
         <table class="table table-bordered table-hover table-striped">
@@ -112,8 +112,13 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ transaction.book.title }}</td>
                     <td>{{ transaction.reserved_date }}</td>
-                    <td><button>Cancel</button></td>
-                   
+                    
+                    {% if transaction.status == 'pending' %}
+                    <td><a href="{% url 'cancel_reservation' transaction.id %}" class="btn btn-danger btn-sm">Cancel</a></td>
+
+                    {% elif transaction.status == 'confirmed' %}<td>Confirmed</td>
+                    {% elif transaction.status == 'canceled' %}<td>Cancelled </td>
+                    {% endif %}
                   
                 </tr>
                 {% endfor %}
