@@ -1,9 +1,17 @@
 from django.shortcuts import render
 from django.db.models import Count
-from book.models import Author, Genre
+from book.models import Author, Book, Genre
 from usermanagement.models import Subscription,MemberSubscriptionLog,User
+from .utils import fetch_google_books_metadata
+from django.core.mail import EmailMessage
+from django.conf import settings 
+from .models import Notification
+from django.http import JsonResponse
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
+
 def view_subscription(request):
     subscription = Subscription.objects.all()
     top_subscription = (
@@ -18,66 +26,35 @@ def view_subscription(request):
     }
     return render(request, 'admindashboard/view_subscription.html', context)
 
-from django.shortcuts import render
-from .utils import fetch_google_books_metadata  # Import the helper function
 
 def search_digital_books(request):
-    
     query = request.GET.get('q', '')
     digital_books = []
-    
     if query:
         digital_books = fetch_google_books_metadata(query)
-    
     return render(request, 'client/digital_books.html', {'books': digital_books})
 
 
-from django.shortcuts import render
-from django.core.mail import EmailMessage
-from django.conf import settings  # Import your User model
-
 def send_email_notification_to_users(subject, message):
-    """
-    Sends an email notification to all users in the User table using BCC.
-    
-    Parameters:
-    - subject: The subject of the email.
-    - message: The content of the email body.
-    
-    Returns:
-    - str: A success message indicating the emails were sent.
-    """
-    # Retrieve all email addresses from the User table
     users = User.objects.all()
-    email_addresses = users.values_list('email', flat=True)  # Get a list of email addresses
-
-    # Create the email message
+    email_addresses = users.values_list('email', flat=True)  
     email = EmailMessage(
-        subject,              # Subject of the email
-        message,              # Body of the email
-        settings.EMAIL_HOST_USER,  # From email (configured in settings.py)
-        [settings.EMAIL_HOST_USER],  # To field (can be empty or just sender email)
-        bcc=email_addresses,  # Add all users to the BCC field
+        subject,           
+        message,            
+        settings.EMAIL_HOST_USER,  
+        [settings.EMAIL_HOST_USER],  
+        bcc=email_addresses,  
     )
-
-    # Send the email
     email.send(fail_silently=False)
-    
     return "Emails sent to users successfully."
+
 
 def send_notification(request):
     if request.method == 'POST':
-        # Retrieve subject and message from the POST request
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-        
-        # Call the function to send email
         result = send_email_notification_to_users(subject, message)
-        
-        # Pass the result to the template for feedback
         return render(request, 'admindashboard/send_notification.html', {'result': result})
-    
-    # If not POST, just render the form
     return render(request, 'admindashboard/send_notification.html')
 
 
@@ -87,44 +64,35 @@ def adminbook_analytics(request):
 
 def books_by_genre_analytics(request):
     books_by_genre = Genre.objects.annotate(book_count=Count('books')).order_by('-book_count')
-    
     genre_labels = [genre.name for genre in books_by_genre]
     genre_counts = [genre.book_count for genre in books_by_genre]
-
     context = {
         'genre_labels': genre_labels,
         'genre_counts': genre_counts,
     }
-
     return render(request, 'admindashboard/books_by_genre_analytics.html', context)
+
 
 def books_by_author_analytics(request):
     books_by_genre = Genre.objects.annotate(book_count=Count('books')).order_by('-book_count')
     genre_labels = [genre.name for genre in books_by_genre]
     genre_counts = [genre.book_count for genre in books_by_genre]
-
-    # Data for Books by Author
     books_by_author = Author.objects.annotate(book_count=Count('books')).order_by('-book_count')[:10]
     author_labels = [f"{author.first_name} {author.last_name}" for author in books_by_author]
     author_counts = [author.book_count for author in books_by_author]
-
     context = {
         'genre_labels': genre_labels,
         'genre_counts': genre_counts,
         'author_labels': author_labels,
         'author_counts': author_counts,
     }
-
     return render(request, 'admindashboard/books_by_author_analytics.html', context)
 
-from django.shortcuts import render
-from .models import Notification
 
 def user_notifications(request):
     notifications = Notification.objects.filter(user=request.user, is_read=False)
     return render(request, 'notifications.html', {'notifications': notifications})
-from django.http import JsonResponse
-from .models import Notification
+
 
 def mark_notification_read(request, notification_id):
     notification = Notification.objects.get(id=notification_id, user=request.user)
@@ -132,10 +100,48 @@ def mark_notification_read(request, notification_id):
     notification.save()
     return JsonResponse({"status": "success"})
 
+
 def membernotifications(request):
-    # Get all notifications for the current user that are unread
     notifications = Notification.objects.filter(user=request.user, is_read=False)
     return render(request, 'client/membernotifications.html', {'notifications': notifications})
+
+
 def create_notification(user, message):
     notification = Notification(user=user, message=message)
     notification.save()
+
+
+def inventory(request):
+    books = Book.objects.all()
+    return render(request, 'libriarian/inventory.html',{'books': books})
+
+
+@csrf_exempt  
+def update_copies_post(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == "POST":
+        count = request.POST.get('count')
+        if not count:
+            messages.error(request, "Please provide a valid count.")
+            return redirect('book_inventory')
+        try:
+            count = int(count)
+            if count < 0 and (book.available_copies + count < 0 or book.total_copies + count < 0):
+                book.total_copies = 0
+                book.available_copies = 0
+                book.save()
+                messages.warning(
+                    request,
+                    f"Cannot subtract {abs(count)} copies as there were not enough. Stock is now reset to zero."
+                )
+            else:
+                book.total_copies += count
+                book.available_copies += count
+                book.save()
+                if count > 0:
+                    messages.success(request, f"Successfully added {count} copies to '{book.title}'.")
+                elif count < 0:
+                    messages.success(request, f"Successfully removed {abs(count)} copies from '{book.title}'.")
+        except ValueError as e:
+            messages.error(request, f"Error: {e}")
+    return redirect('inventory')

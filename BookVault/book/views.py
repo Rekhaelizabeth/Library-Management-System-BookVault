@@ -16,15 +16,18 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.utils import timezone
 from usermanagement.models import LibrarianProfile
+from django.utils.timezone import now
 
 
 def book_list(request):
     books = Book.objects.exclude(availability='removed')
     return render(request, 'libriarian/book_list.html', {'books': books})
 
+
 def member_list(request):
     user = User.objects.exclude(is_active=True)
     return render(request, 'libriarian/member.html', {'users': user})
+
 
 def issue_book(request):
     issue = BookIssueTransaction.objects.filter(status='Requested')
@@ -32,122 +35,90 @@ def issue_book(request):
     return render(request, 'libriarian/issue_book.html', {'issue': issue})
 
 
-
 def librairianlost_book(request):
     issue = BookIssueTransaction.objects.filter(reportlostbook=True)
     print(issue)
     return render(request, 'libriarian/librairianlost_book.html', {'issue': issue})
+
 
 def librairianreturn_book(request):
     returnbook = BookIssueTransaction.objects.filter(bookreturn=True)
     print(returnbook)
     return render(request, 'libriarian/return_book.html', {'returnbook': returnbook})
 
-from django.utils.timezone import now
 
 @login_required
 def userviewprofile(request):
-    # Fetch all book issue transactions and reservations for the logged-in user
     issue = BookIssueTransaction.objects.filter(user=request.user)
     reserve = BookReservation.objects.filter(user=request.user)
-    
-    # Debugging statements for development (optional)
-    print(issue)
-    print(reserve)
-
-    # Combine both contexts into a single dictionary
     context = {
         'issue': issue,
         'reserve': reserve,
-        'today': now().date(),  # Add today's date
+        'today': now().date(),  
     }
-
-    # Render the profile page with the combined context
     return render(request, 'client/userviewprofile.html', context)
 
 
 def approve_book_request(request, transaction_id):
     transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
     member_profile = get_object_or_404(MemberProfile, user=transaction.user)
-    
-    # Get the borrowing limit for that user
-    borrowing_limit = member_profile.borrowing_limit
-    
-    print(borrowing_limit)
+    borrowing_limit = member_profile.borrowing_limit   
     print(f"Transaction ID: {transaction_id}")
     print(f"User: {transaction.user.name}, Borrowing Limit: {borrowing_limit}, status: {transaction.status}")
     if transaction.status == 'Requested':
-        # Update the status to 'ISSUED'
         transaction.status = 'ISSUED'
         transaction.issue_date = timezone.now() 
-        
-    
         transaction.issuedby = LibrarianProfile.objects.get(user=request.user)
         print(f"User: {transaction.issuedby.user.name}, Borrowing Limit: {borrowing_limit}")
-        
-    
         transaction.save()
-        
-
         return redirect('issue_book')
-    return redirect('issue_book')  # Or show an error message if necess
+    return redirect('issue_book')  
+
 
 def approve_lostbook_request(request, transaction_id):
     transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
-
     if transaction.status == 'ISSUED':
-        # Update the status to 'ISSUED'
         transaction.status = 'LOST'
         transaction.reportlostbook = None
         transaction.penalties = 500.0
         transaction.save()
-    
-
         return redirect('librairianlost_book')
-    return redirect('librairianlost_book')  # Or show an error message if necess
+    return redirect('librairianlost_book')  
 
 
 def approve_bookreturn_request(request, transaction_id):
     transaction = get_object_or_404(BookIssueTransaction, id=transaction_id)
-    
     if transaction.bookreturn:
         if request.method == 'POST':
-            # Fetch the status from the form
             new_status = request.POST.get('status')
-            
             if new_status in ['DAMAGED',  'RETURNED']:
                 transaction.status = new_status
                 transaction.bookreturn = None
-                # Apply penalties based on the status
                 if new_status == 'DAMAGED':
                     transaction.penalties = 250.0
                     create_notification(
                         transaction.user,
                         f"Your book '{transaction.book.title}' has been marked as DAMAGED. A penalty of $250 has been applied."
                     )
-             
                 else:
-                    transaction.penalties = 0.0  # No penalties for 'RETURNED'
+                    transaction.penalties = 0.0  
                     book = transaction.book
-                    book.available_copies += 1  # Increase available copies by 1
+                    book.available_copies += 1 
                     book.save()
                     create_notification(
                         transaction.user,
                         f"Your book '{transaction.book.title}' has been successfully returned. Thank you!"
                     )
-                    
-                
                 transaction.save()
                 messages.success(request, "Book return processed successfully.")
-                return redirect('return_book')  # Redirect to the desired page
+                return redirect('return_book') 
             else:
                 messages.error(request, "Invalid status selected.")
         else:
-            # Display the form to update book status
             return render(request, 'libriarian/approve_return.html', {'transaction': transaction})
-    
     messages.error(request, "This book has not been marked for return.")
     return redirect('issue_book')
+
 
 def approve_member(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -165,6 +136,7 @@ def add_tag(request):
             return redirect('add_tag')
     return render(request, 'libriarian/add_tag.html')
 
+
 def add_genre(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -173,6 +145,7 @@ def add_genre(request):
             messages.success(request, 'Genre added successfully!')
             return redirect('add_genre')
     return render(request, 'libriarian/add_genre.html')
+
 
 def add_author(request):
     if request.method == 'POST':
@@ -184,6 +157,7 @@ def add_author(request):
             messages.success(request, 'Author added successfully!')
             return redirect('add_author')
     return render(request, 'libriarian/add_author.html')
+
 
 def add_book(request):
     if request.method == "POST":
@@ -197,10 +171,9 @@ def add_book(request):
         genre_id = request.POST.get('genre')
         description = request.POST.get('description')
         availability = request.POST.get('availability')
-        tags_ids = request.POST.getlist('tags')  # Collect all checked tag IDs
-        related_titles_ids = request.POST.getlist('related_titles')  # Collect all related titles IDs
+        tags_ids = request.POST.getlist('tags')  
+        related_titles_ids = request.POST.getlist('related_titles')  
         cover_image = request.FILES.get('cover_image', None)
-
         try:
             author = Author.objects.get(id=author_id)
             genre = Genre.objects.get(id=genre_id)
@@ -217,18 +190,14 @@ def add_book(request):
                 availability=availability,
                 cover_image=cover_image,
             )
-            # Add tags to the book
             tags = Tag.objects.filter(id__in=tags_ids)
             book.tags.set(tags)
-            
             related_books = Book.objects.filter(id__in=related_titles_ids)
             book.related_titles.set(related_books)
-
             messages.success(request, "Book added successfully!")
-            return redirect('add_book')  # Redirect to the same page or another page
+            return redirect('add_book')  
         except Exception as e:
             messages.error(request, f"Error adding book: {e}")
-
     authors = Author.objects.all()
     genres = Genre.objects.all()
     tags = Tag.objects.all()
@@ -240,61 +209,44 @@ def add_book(request):
         'books': books,
     })
 
+
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     if request.method == "POST":
-        # Update the book details
         isbn = request.POST.get('isbn')
         title = request.POST.get('title')
-        author_id = request.POST.get('author')  # Assuming author_id is passed
+        author_id = request.POST.get('author')  
         publisher = request.POST.get('publisher')
         publication_year = request.POST.get('publication_year')
         language = request.POST.get('language')
-        genre_id = request.POST.get('genre')  # Assuming genre_id is passed
+        genre_id = request.POST.get('genre') 
         description = request.POST.get('description')
         total_copies = int(request.POST.get('total_copies', 1))
-        available_copies = book.total_copies  # Reset available copies
+        available_copies = book.total_copies  
         cover_image = request.FILES.get('cover_image')
         print("Cover Image:", request.FILES.get('cover_image'))
         if cover_image:
             book.cover_image = cover_image
-
-
         book.isbn = isbn
         book.title = title
-        book.author_id = author_id  # Ensure this is a valid Author ID
+        book.author_id = author_id  
         book.publisher = publisher
         book.publication_year = publication_year
         book.language = language
-        book.genre_id = genre_id  # Ensure this is a valid Genre ID
+        book.genre_id = genre_id  
         book.description = description
         book.total_copies = total_copies
         book.available_copies = available_copies
-       
-        
-        # Save the updated book instance
         book.save()
-        return redirect('book_list')  # Redirect after editing
+        return redirect('book_list')  
     return render(request, 'libriarian/edit_book.html', {'book': book})
 
+
 def remove_book(request, book_id):
-    """
-    View to set a book's availability to 'Removed'.
-    """
     book = get_object_or_404(Book, id=book_id)
-    
-    # Update the availability status
     book.availability = 'removed'
     book.save()
-    
-    # Redirect or return a response
-   
-    
-    # For non-AJAX requests, redirect to a book list or detail page
-    return redirect('book_list')  # Replace 'book_list' with the appropriate URL name
-
-def inventory(request):
-    return render(request, 'book/inventory.html')
+    return redirect('book_list')  
 
 
 def generate_barcode(data):
@@ -303,19 +255,16 @@ def generate_barcode(data):
     writer = ImageWriter()
     sanitized_data = "".join(c if c.isalnum() or c in " |:,-" else "_" for c in data)  # Clean up data
     Code128(sanitized_data, writer=writer).write(buffer, options={"write_text": False})
-    # print(base64.b64encode(buffer.getvalue()).decode('utf-8'))
     return base64.b64encode(buffer.getvalue()).decode('utf-8')
 
+
 def viewbooks(request):
-    query = request.GET.get('q', '')  # Search query
-    availability = request.GET.get('availability', '')  # Availability filter
-    genre = request.GET.get('genre', '')  # Genre filter
-    year = request.GET.get('year', '')  # Year filter
-    language = request.GET.get('language', '')  # Language filter
-
-    books = Book.objects.exclude(availability='removed')  # Default: fetch all books
-
-    # Apply search query
+    query = request.GET.get('q', '')  
+    availability = request.GET.get('availability', '') 
+    genre = request.GET.get('genre', '')  
+    year = request.GET.get('year', '')  
+    language = request.GET.get('language', '')  
+    books = Book.objects.exclude(availability='removed')  
     if query:
         books = books.filter(
             Q(title__icontains=query) |
@@ -325,8 +274,6 @@ def viewbooks(request):
             Q(tags__name__icontains=query) |
             Q(description__icontains=query)
         ).distinct()
-
-    # Apply filters
     if availability:
         books = books.filter(status=(availability == 'available'))
     if genre:
@@ -338,11 +285,8 @@ def viewbooks(request):
     for book in books:
         barcode_data = f"Book: {book.id}, Available copies:{book.available_copies}"
         book.barcode = generate_barcode(barcode_data)
-
     member_profile = get_object_or_404(MemberProfile, user=request.user)
-    has_subscription = member_profile.subscription  # Assuming this field exists in MemberProfile
-
-    # Pass filters and books to the template
+    has_subscription = member_profile.subscription  
     genres = Genre.objects.all()
     return render(request, 'client/viewbooks.html', {
         'books': books,
@@ -357,69 +301,72 @@ def viewbooks(request):
 
 
 def book_transaction_list(request):
-    # Fetch all BookIssueTransaction entries
     transactions = BookIssueTransaction.objects.filter(user=request.user)
-
-    # Pass the transactions to the template
     return render(request, 'client/book_transaction_list.html', {'transactions': transactions})
 
+
 def tag_list(request):
-    tags = Tag.objects.all()  # Retrieve all tags from the database
+    tags = Tag.objects.all() 
     return render(request, 'libriarian/tag_list.html', {'tags': tags})
 
+
 def genre_list(request):
-    genres = Genre.objects.all()  # Fetch all genres from the database
+    genres = Genre.objects.all()  
     return render(request, 'libriarian/genre_list.html', {'genres': genres})
 
+
 def author_list(request):
-    authors = Author.objects.all()  # Fetch all authors from the database
+    authors = Author.objects.all()  
     return render(request, 'libriarian/author_list.html', {'authors': authors})
 
-# View to display genres as buttons
+
 def genre_categorization(request):
-    genres = Genre.objects.all()  # Fetch all genres
+    genres = Genre.objects.all() 
     return render(request, 'client/genre_categorization.html', {'genres': genres})
 
-# View to display books under a specific genre
+
 def books_by_genre(request, genre_id):
-    genre = get_object_or_404(Genre, id=genre_id)  # Fetch the specific genre
-    books = Book.objects.filter(genre=genre)  # Get books under this genre
+    genre = get_object_or_404(Genre, id=genre_id)  
+    books = Book.objects.filter(genre=genre) 
     return render(request, 'client/books_by_genre.html', {'genre': genre, 'books': books})
 
 
 def tag_categorization(request):
-    tags = Tag.objects.all()  # Fetch all tags
+    tags = Tag.objects.all()  
     return render(request, 'client/tag_categorization.html', {'tags': tags})
+
 
 def books_by_tag(request, tag_id):
     tag = get_object_or_404(Tag, id=tag_id)
-    books = Book.objects.filter(tags=tag)  # Fetch all books under the selected tag
+    books = Book.objects.filter(tags=tag) 
     return render(request, 'client/books_by_tag.html', {'tag': tag, 'books': books})
 
 
 def author_categorization(request):
-    """Display a list of all authors with buttons."""
     authors = Author.objects.all()
     return render(request, 'client/author_categorization.html', {'authors': authors})
 
+
 def books_by_author(request, author_id):
-    """Display all books by a specific author."""
     author = get_object_or_404(Author, id=author_id)
     books = Book.objects.filter(author=author)
     return render(request, 'client/books_by_author.html', {'author': author, 'books': books})
 
 
 def tagadmin_list(request):
-    tags = Tag.objects.all()  # Retrieve all tags from the database
+    tags = Tag.objects.all()  
     return render(request, 'admindashboard/tagadmin_list.html', {'tags': tags})
 
+
 def genreadmin_list(request):
-    genres = Genre.objects.all()  # Fetch all genres from the database
+    genres = Genre.objects.all() 
     return render(request, 'admindashboard/genreadmin_list.html', {'genres': genres})
 
+
 def authoradmin_list(request):
-    authors = Author.objects.all()  # Fetch all authors from the database
+    authors = Author.objects.all()  
     return render(request, 'admindashboard/authoradmin_list.html', {'authors': authors})
+
 
 def bookadmin_list(request):
     books = Book.objects.all()

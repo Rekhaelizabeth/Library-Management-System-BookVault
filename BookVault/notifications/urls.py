@@ -6,6 +6,5 @@ urlpatterns = [
     path('subscriptions/<int:subscription_id>/subscribe/', views.subscribe_to_plan, name='subscribe_to_plan'),
     path('subscriptions/success/', views.subscription_success, name='subscription_success'),
     path("subscriptions/<int:subscription_id>/subscribe/", views.subscribe_to_plan, name="subscribe_to_plan"),
-    path("verify-payment/", views.verify_payment, name="verify_payment"),
-   
+    path("verify-payment/", views.verify_payment, name="verify_payment"),   
 ]

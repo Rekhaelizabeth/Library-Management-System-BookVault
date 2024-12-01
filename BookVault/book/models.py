@@ -1,38 +1,28 @@
 from django.db import models
 
 
-# Model for Author (if you plan to store authors separately)
 class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    bio = models.TextField(blank=True, null=True)  # Optional field for bio
+    bio = models.TextField(blank=True, null=True)  
     status=models.BooleanField(default=False)
-
-    
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-# Model for Genre
+
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
     status=models.BooleanField(default=False)
-
-
-
     def __str__(self):
         return self.name
 
-# Model for Book
 
-
-# Model for Tags (used for tagging books with keywords)
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
     status=models.BooleanField(default=False)
-
-
     def __str__(self):
         return self.name
+  
     
 class Book(models.Model):
     AVAILABILITY_CHOICES = [
@@ -42,7 +32,6 @@ class Book(models.Model):
         ('lost', 'Lost'),
         ('removed','Removed')
     ]
-    
     isbn = models.CharField(max_length=13, unique=True)  # ISBN is unique
     title = models.CharField(max_length=255)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
@@ -61,11 +50,9 @@ class Book(models.Model):
     )
     related_titles = models.ManyToManyField('self', blank=True, symmetrical=False)
     status=models.BooleanField(default=False)
-    total_copies = models.IntegerField(default=1)  # Total number of copies available in the library
-    available_copies = models.IntegerField(default=1)  # Number of copies currently available for issue
+    total_copies = models.IntegerField(default=1) 
+    available_copies = models.IntegerField(default=1)  
     reserved_copies = models.IntegerField(default=0)
-
-
     def str(self):
         return self.title
 

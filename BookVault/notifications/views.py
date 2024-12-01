@@ -11,13 +11,14 @@ from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 
 
-
 @login_required
 def list_subscriptions(request):
     if request.user.role != "Member":
-        raise PermissionDenied  # If not, raise PermissionDenied
+        raise PermissionDenied 
     subscriptions = Subscription.objects.all()
     return render(request, "member/list_subscriptions.html", {"subscriptions": subscriptions})
+
+
 @login_required
 def subscription_success(request):
     if request.user.role != "Member":
@@ -27,17 +28,16 @@ def subscription_success(request):
 
 client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 
+
 @login_required
 def subscribe_to_plan(request, subscription_id):
     if request.user.role != "Member":
         raise PermissionDenied 
     subscription = get_object_or_404(Subscription, id=subscription_id)
     member_profile = MemberProfile.objects.get(user=request.user)
-
     if request.method == "POST":
         try:
-            # Step 1: Create a Razorpay Order
-            order_amount = int(subscription.price * 100)  # Razorpay expects amount in paise
+            order_amount = int(subscription.price * 100)  
             order_currency = "INR"
             order_receipt = f"order_rcptid_{subscription.id}"
             razorpay_order = client.order.create(
@@ -47,9 +47,6 @@ def subscribe_to_plan(request, subscription_id):
                     "receipt": order_receipt,
                 }
             )
-            print("haii")
-
-            # Step 2: Save the order details in SubscriptionLog
             start_date = timezone.now()
             end_date = start_date + timezone.timedelta(days=subscription.time_period)
             MemberSubscriptionLog.objects.create(
@@ -61,10 +58,6 @@ def subscribe_to_plan(request, subscription_id):
                 payment_id=razorpay_order["id"],
                 status = True,
             )
-            print("hello")
-
-
-            # Step 3: Render the payment page
             return render(
                 request,
                 "member/payment_page.html",
@@ -76,11 +69,8 @@ def subscribe_to_plan(request, subscription_id):
                 },
             )
         except Exception as e:
-            # Log the error (optional) and redirect to the error page
             print(f"Error occurred: {e}")
-            return redirect("home")  # Replace 'error_page' with the name of your error page's URL
-
-    # Render the subscription selection page for GET requests
+            return redirect("home") 
     return render(request, "member/subscribe_to_plan.html", {"subscription": subscription})
 
 
@@ -88,49 +78,30 @@ def subscribe_to_plan(request, subscription_id):
 def verify_payment(request):
     if request.method == "POST":
         try:
-            # Step 1: Get payment details from the request
             payment_id = request.POST.get("razorpay_payment_id")
             order_id = request.POST.get("razorpay_order_id")
             signature = request.POST.get("razorpay_signature")
-            
-            print("Welcome")
-            # Step 2: Verify the payment signature
             client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
             params_dict = {
                 "razorpay_order_id": order_id,
                 "razorpay_payment_id": payment_id,
                 "razorpay_signature": signature,
             }
-            print("World")
-            # Razorpay utility to verify the payment signature
             client.utility.verify_payment_signature(params_dict)
-            
-            # Step 3: Update the payment status in the database
             subscription_log = MemberSubscriptionLog.objects.get(payment_id=order_id)
             subscription_log.payment_status = "Completed"
             subscription_log.status = True
             subscription_log.save()
-
-
             member_profile = MemberProfile.objects.get(user=subscription_log.member)
             print(member_profile.borrowing_limit)
             member_profile.subscription = subscription_log
             member_profile.save()
-            print("update")
-            # Step 4: Redirect to a success page
-            return redirect("subscription_success")
-            
+            return redirect("subscription_success")           
         except razorpay.errors.SignatureVerificationError as e:
-            # Log error and redirect to an error page
             print(f"Signature verification failed: {e}")
-            print("1")
-            return JsonResponse({"status": "failure", "reason": "Invalid signature"}, status=400)
-            
+            return JsonResponse({"status": "failure", "reason": "Invalid signature"}, status=400)           
         except Exception as e:
-            # Handle other unexpected errors
             print(f"Error occurred: {e}")
-            print("2")
             return JsonResponse({"status": "failure", "reason": "Payment verification failed"}, status=400)
     else:
-        print("3")
         return JsonResponse({"status": "failure", "reason": "Invalid request method"}, status=405)
