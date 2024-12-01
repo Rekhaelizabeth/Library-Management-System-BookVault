@@ -1,3 +1,8 @@
+{% extends "client/baseindexmember.html" %}
+
+{% block title %}Books Under "{{ tag.name }}"{% endblock %}
+
+{% block content %}
 <h1>Search Digital Books</h1>
 <form method="get" action="{% url 'search_digital_books' %}">
     <input type="text" name="q" placeholder="Search for books..." value="{{ request.GET.q }}">
@@ -18,3 +23,12 @@
 {% else %}
     <p>No books found. Try a different search query.</p>
 {% endif %}
+
+
+
+{% endblock %}
+
+
+
+
+

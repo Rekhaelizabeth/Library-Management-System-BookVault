@@ -46,99 +46,42 @@
 								</ul>
 							</div>
 						</div>
+
+						
 						<div class="nav-menus-wrapper" style="transition-property: none;">
 							<ul class="nav-menu">
+								<li><a href="{% url 'home' %}">Home<span class="submenu-indicator"></span></a>
+									
+								</li>
+								<li class="active"><a href="{% url 'viewbooks' %}">Books<span class="submenu-indicator"></span></a>
+									<ul class="nav-dropdown nav-submenu">
+										<li><a href="{% url 'viewbooks' %}">Book Page</a></li>
+										<li><a href="{% url 'author_categorization' %}">Author Page</a></li>
+										<li><a href="{% url 'tag_categorization' %}">Tag Page</a></li>
+										<li><a href="{% url 'genre_categorization' %}">Genre Page</a></li>
+										
+									</ul>
+								</li>
+								
+								<li><a href="{% url 'search_digital_books' %}">Digital Library<span class="submenu-indicator"></span></a>
+									
+										</li>
+										
+										<li><a href="{% url 'userviewprofile' %}">My Book Records<span class="submenu-indicator"></span></a>
+											
+										</li>
+										<li><a href="{% url 'suggestions' %}">Suggestions<span class="submenu-indicator"></span></a>
+											
+										</li>
+
+
+
+									</ul>
+								</li>
+								
+								
+								
 							
-								<li class="active"><a href="404.html#">Home<span class="submenu-indicator"></span></a>
-									<ul class="nav-dropdown nav-submenu">
-										<li><a href="index.html">Home 1</a></li>
-										<li><a href="home-2.html">Home 2</a></li>
-										<li><a href="home-3.html">Home 3</a></li>
-										<li><a href="home-4.html">Home 4</a></li>
-										<li><a href="home-5.html">Home 5</a></li>
-										<li><a href="home-6.html">Home 6</a></li>
-										<li><a href="home-7.html">Home 7</a></li>
-										<li><a href="map.html">Map Home</a></li>
-									</ul>
-								</li>
-								
-								<li><a href="404.html#">Listings<span class="submenu-indicator"></span></a>
-									<ul class="nav-dropdown nav-submenu">
-										<li><a href="404.html#">Listing Grid<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="grid-layout-with-sidebar.html">Grid Style 1</a></li>
-												<li><a href="grid-layout-2.html">Grid Style 2</a></li>
-												<li><a href="grid-layout-3.html">Grid Style 3</a></li>
-											</ul>
-										</li>
-										<li><a href="404.html#">Listing List<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="list-layout-with-sidebar.html">List Style 1</a></li>
-												<li><a href="list-layout-with-map-2.html">List Style 2</a></li>
-											</ul>
-										</li>
-										<li><a href="404.html#">Listing Map<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="half-map.html">Half Map</a></li>
-												<li><a href="half-map-2.html">Half Map 2</a></li>
-												<li><a href="classical-layout-with-map.html">Classical With Sidebar</a></li>
-												<li><a href="list-layout-with-map.html">List Sidebar Map</a></li>
-												<li><a href="grid-layout-with-map.html">Grid Sidebar Map</a></li>
-											</ul>
-										</li>
-										<li><a href="404.html#">Agents View<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="agents.html">Agent Grid Style</a></li>
-												<li><a href="agents-2.html">Agent Grid 2</a></li>
-												<li><a href="agent-page.html">Agent Detail Page</a></li>
-											</ul>
-										</li>
-										<li><a href="404.html#">Agency View<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="agencies.html">Agency Grid Style</a></li>
-												<li><a href="agency-page.html">Agency Detail Page</a></li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-								
-								<li><a href="404.html#">Property<span class="submenu-indicator"></span></a>
-									<ul class="nav-dropdown nav-submenu">
-										<li class=""><a href="404.html#">User Admin<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="dashboard.html">User Dashboard</a></li>
-												<li><a href="my-profile.html">My Profile</a></li>
-												<li><a href="my-property.html">My Property</a></li>
-												<li><a href="messages.html">Messages</a></li>
-												<li><a href="bookmark-list.html">Bookmark Property</a></li>
-												<li><a href="submit-property.html">Submit Property</a></li>
-											</ul>
-										</li>
-										<li><a href="404.html#">Single Property<span class="submenu-indicator"></span></a>
-											<ul class="nav-dropdown nav-submenu">
-												<li><a href="single-property-1.html">Single Property 1</a></li>
-												<li><a href="single-property-2.html">Single Property 2</a></li>
-												<li><a href="single-property-3.html">Single Property 3</a></li>
-												<li><a href="single-property-4.html">Single Property 4</a></li>
-											</ul>
-										</li>
-										<li><a href="compare-property.html">Compare Property</a></li>
-									</ul>
-								</li>
-								
-								<li><a href="404.html#">Pages<span class="submenu-indicator"></span></a>
-									<ul class="nav-dropdown nav-submenu">
-										<li><a href="blog.html">Blog Style</a></li>
-										<li><a href="about-us.html">About Us</a></li>
-										<li><a href="pricing.html">Pricing</a></li>
-										<li><a href="404.html">404 Page</a></li>
-										<li><a href="checkout.html">Checkout</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="component.html">Elements</a></li>
-										<li><a href="privacy.html">Privacy Policy</a></li>
-										<li><a href="faq.html">FAQs</a></li>
-									</ul>
-								</li>
 								
 							</ul>
 					
@@ -202,9 +145,6 @@
 			</section>
 			<!-- ============================ User Dashboard End ================================== -->
 			
-			<!-- ============================ Call To Action ================================== -->
-			
-			<!-- ============================ Call To Action End ================================== -->
 			
 			<!-- ============================ Footer Start ================================== -->
 			<footer class="dark-footer skin-dark-footer style-2">
@@ -214,17 +154,10 @@
 							
 							<div class="col-lg-5 col-md-5">
 								<div class="footer_widget">
-									<img src="{% static 'assets/img/logo-light.png' %}" class="img-footer small mb-4" alt="" />
-									<h4 class="extream mb-3">Do you need help with<br>anything?</h4>
-									<p>Receive updates, hot deals, tutorials, discounts sent straignt in your inbox every month</p>
-									<div class="foot-news-last mt-4">
-										<div class="input-group">
-										  <input type="text" class="form-control" placeholder="Email Address">
-											<div class="input-group-append">
-												<button type="button" class="btn btn-danger b-0 text-light">Subscribe</button>
-											</div>
-										</div>
-									</div>
+									<img src="{% static 'assets/logo/logocrop.png' %}" class="img-footer small mb-4" alt="" />
+									<h4 class="extream mb-3">"Managing books, connecting readers"</h4>
+									<p>Efficiently managing books, resources, and readers for a seamless library experience.</p>
+								
 								</div>
 							</div>
 							
@@ -235,45 +168,32 @@
 										<div class="footer_widget">
 											<h4 class="widget_title">Layouts</h4>
 											<ul class="footer-menu">
-												<a href="{% url 'suggestions' %}" class="btn btn-primary">Suggestions</a>
+											
 
-												<li><a href="404.html#">About Page</a></li>
-												<li><a href="404.html#">Service Page</a></li>
-												<li><a href="404.html#">Property Page</a></li>
-												<li><a href="404.html#">Contact Page</a></li>
-												<li><a href="404.html#">Single Blog</a></li>
+												<li><a href="{% url 'home'%}">Home Page</a></li>
+												<li><a href="{% url 'about' %}">About</a></li>
+												<li><a href="{% url 'profile' %}">Profile Page</a></li>
+												<li><a href="{% url 'userviewprofile' %}">User Record Page</a></li>
+								
 											</ul>
 										</div>
 									</div>
 											
 									<div class="col-lg-4 col-md-4">
 										<div class="footer_widget">
-											<h4 class="widget_title">All Sections</h4>
+											<h4 class="widget_title">Book</h4>
 											<ul class="footer-menu">
-												<li><a href="404.html#">Headers<span class="new">New</span></a></li>
-												<li><a href="404.html#">Features</a></li>
-												<li><a href="404.html#">Attractive<span class="new">New</span></a></li>
-												<li><a href="404.html#">Testimonials</a></li>
-												<li><a href="404.html#">Videos</a></li>
-												<li><a href="404.html#">Footers</a></li>
+												<li><a href="{% url 'viewbooks' %}">Book Page</a></li>
+												<li><a href="{% url 'author_categorization' %}">Author Page</a></li>
+												<li><a href="{% url 'tag_categorization' %}">Tag Page</a></li>
+												<li><a href="{% url 'genre_categorization' %}">Genre Page</a></li>
+												<li><a href="{% url 'search_digital_books' %}">Digital Library</a></li>
+												
 											</ul>
 										</div>
 									</div>
 							
-									<div class="col-lg-4 col-md-4">
-										<div class="footer_widget">
-											<h4 class="widget_title">Company</h4>
-											<ul class="footer-menu">
-												<li><a href="404.html#">About</a></li>
-												<li><a href="404.html#">Blog</a></li>
-												<li><a href="404.html#">Pricing</a></li>
-												<li><a href="404.html#">Affiliate</a></li>
-												<li><a href="404.html#">Login</a></li>
-												<li><a href="404.html#">Changelog<span class="update">Update</span></a></li>
-											</ul>
-										</div>
-									</div>
-									
+								
 								</div>
 							</div>
 						</div>
@@ -284,7 +204,7 @@
 					<div class="container">
 						<div class="row align-items-center">
 							<div class="col-lg-12 col-md-12 text-center">
-								<p class="mb-0">© 2023 RentUP. Designd By <a href="https://themezhub.com">ThemezHub</a>.</p>
+								<p class="mb-0">© 2024 BookVault. Designd By <a href="https://themezhub.com">BookVault</a>.</p>
 							</div>
 						</div>
 					</div>

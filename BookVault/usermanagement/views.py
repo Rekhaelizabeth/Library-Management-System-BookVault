@@ -12,7 +12,8 @@ from .models import BookIssueTransaction, BookReservation, MemberSubscriptionLog
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
-
+def about(request):
+    return render(request, 'client/about.html')
 def error403(request):
     return render(request, 'error403.html')
 def baseindex(request):
@@ -313,22 +314,9 @@ def generate_qr_code(request):
 def borrow_book(request, book_id):
     if request.user.role != "Member":
         return redirect("error403")
-    
-    # Fetch the book by its ID
     book = get_object_or_404(Book, id=book_id)
-    
     user = request.user
-   
     member_profile = get_object_or_404(MemberProfile, user=user)
-    
-    # Get the borrowing limit for that user
-    borrowing_limit = member_profile.borrowing_limit
-
-    print(borrowing_limit)
-    print("helloo")
-    print(book)
-    print(user)
-    
     if book.available_copies > 0:
         transaction = BookIssueTransaction.objects.create(
             book=book,
@@ -337,12 +325,7 @@ def borrow_book(request, book_id):
             
 
         )
-        
-        print("hai")
-        print(book.available_copies)
         book.available_copies -= 1
-        print(book.available_copies)
-        
         book.availability = 'checked_out'
         book.save()
 
@@ -350,7 +333,7 @@ def borrow_book(request, book_id):
     else:
         print("No available copies left.")
     
-    return redirect('home')  # Redirect to the book list or another page
+    return redirect('viewbooks')  # Redirect to the book list or another page
 
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now

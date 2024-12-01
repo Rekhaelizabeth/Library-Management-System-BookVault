@@ -254,6 +254,11 @@ def edit_book(request, book_id):
         description = request.POST.get('description')
         total_copies = int(request.POST.get('total_copies', 1))
         available_copies = book.total_copies  # Reset available copies
+        cover_image = request.FILES.get('cover_image')
+        print("Cover Image:", request.FILES.get('cover_image'))
+        if cover_image:
+            book.cover_image = cover_image
+
 
         book.isbn = isbn
         book.title = title
@@ -265,6 +270,7 @@ def edit_book(request, book_id):
         book.description = description
         book.total_copies = total_copies
         book.available_copies = available_copies
+       
         
         # Save the updated book instance
         book.save()
@@ -307,7 +313,7 @@ def viewbooks(request):
     year = request.GET.get('year', '')  # Year filter
     language = request.GET.get('language', '')  # Language filter
 
-    books = Book.objects.all()  # Default: fetch all books
+    books = Book.objects.exclude(availability='removed')  # Default: fetch all books
 
     # Apply search query
     if query:

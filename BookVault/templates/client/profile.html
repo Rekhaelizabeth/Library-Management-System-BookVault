@@ -30,7 +30,7 @@
             <p><strong>Outstanding Fines:</strong> {{ member_profile.outstanding_fines }}</p>
             <p><strong>Reserved Books Count:</strong> {{ member_profile.reserved_books_count }}</p>
             <p><strong>Favorite Genres:</strong> {{ member_profile.favorite_genres }}</p>
-            <p><strong>Librarian Approved:</strong> {{ member_profile.libriarian_approved }}</p>
+            {% comment %} <p><strong>Librarian Approved:</strong> {{ member_profile.libriarian_approved }}</p> {% endcomment %}
         {% else %}
             <p>No membership profile available.</p>
         {% endif %}
