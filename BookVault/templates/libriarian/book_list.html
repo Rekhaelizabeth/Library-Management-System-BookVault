@@ -111,16 +111,8 @@
 
 
 <section class="mt-6 space-y-6 xl:flex xl:space-y-0 xl:-mx-3">
-    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-2/3 xl:p-6">
-        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Book List</h2>
+    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-3/3 xl:p-6">
         
-        <p class="flex items-center mt-2 text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-    
-            <span class="mx-2">30 done this month</span>
-        </p>
     
         <div class="flex flex-col mt-8">
             <div class="overflow-x-auto">
@@ -163,18 +155,6 @@
         </div>
     </div>
 
-    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-1/3 xl:p-6">
-        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Orders overview</h2>
-        
-        <p class="mt-2 text-gray-500">
-            <span class="text-green-500">+30%</span>&nbsp;this month
-        </p>
-
-        <div class="flow-root mt-6">
-            {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-        </div>
-    </div>
+   
 </section>
 {% endblock %}

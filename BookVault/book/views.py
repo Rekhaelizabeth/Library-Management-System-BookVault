@@ -425,3 +425,5 @@ def bookadmin_list(request):
     books = Book.objects.all()
     return render(request, 'admindashboard/bookadmin_list.html', {'books': books})
 
+
+

@@ -630,3 +630,22 @@ def reset_password(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         messages.error(request, "Invalid reset link.")
         return redirect('forgot_password')
+    
+
+from django.shortcuts import render, get_object_or_404
+from .models import User
+
+def librarian_profile(request):
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if not authenticated
+
+    # Ensure the logged-in user is a librarian
+    if request.user.role != "Librarian":
+        return redirect('home')  # Redirect to home or appropriate page
+
+    # Fetch the librarian's details
+    librarian = request.user
+
+    return render(request, 'libriarian/libriarianprofile.html', {
+        'librarian': librarian,
+    })
