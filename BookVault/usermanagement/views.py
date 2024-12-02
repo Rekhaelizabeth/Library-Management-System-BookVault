@@ -191,10 +191,38 @@ def user_login(request):
 
 def admin_dashboard(request):
     return render(request, 'client/admin_dashboard.html')
-
+from django.db.models import Sum, Count
 
 def librarian_dashboard(request):
-    return render(request, 'libriarian/index.html')
+    student_count = MemberProfile.objects.filter(membership_type='Student').count()
+    faculty_count = MemberProfile.objects.filter(membership_type='Faculty').count()
+    general_count = MemberProfile.objects.filter(membership_type='General').count()
+    total_penalties = BookIssueTransaction.objects.aggregate(total=Sum('penalties'))['total'] or 0.0
+    total_books_issued = BookIssueTransaction.objects.filter(status='ISSUED').count()
+    total_books_returned = BookIssueTransaction.objects.filter(status='RETURNED').count()
+    total_lost_books = BookIssueTransaction.objects.filter(status='LOST').count()
+    total_books = Book.objects.count()
+    total_authors = Author.objects.count()
+    total_genres = Genre.objects.count()
+    total_tags = Tag.objects.count()
+
+    context = {
+        'student_count': student_count,
+        'faculty_count': faculty_count,
+        'general_count': general_count,
+        'total_penalties': total_penalties,
+        'total_books_issued': total_books_issued,
+        'total_books_returned': total_books_returned,
+        'total_lost_books': total_lost_books,
+        'total_books': total_books,
+        'total_authors': total_authors,
+        'total_genres': total_genres,
+        'total_tags': total_tags,
+        
+    }
+
+    return render(request, 'libriarian/index.html', context)
+
 
 
 def member_dashboard(request):

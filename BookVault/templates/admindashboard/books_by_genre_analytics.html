@@ -1,43 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Library Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>Library Analytics</h1>
+{% extends "admindashboard/adminbaseindex.html" %}
 
-    <h2>Books by Genre</h2>
-    <canvas id="booksByGenreChart" width="400" height="200"></canvas>
-    
-    <script>
-        // Data from Django context
-        const genreLabels = {{ genre_labels|safe }};
-        const genreCounts = {{ genre_counts|safe }};
+{% block title %}Books Page{% endblock %}
 
-        // Create a bar chart
-        const ctx = document.getElementById('booksByGenreChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: genreLabels,
-                datasets: [{
-                    label: 'Number of Books',
-                    data: genreCounts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
-</body>
-</html>
+{% block content %}
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Analytics
+</h1>
+
+                        <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
+                            <a href="index.html#" class="text-gray-600 hover:underline">
+                                Pages
+                            </a>
+
+                            <span class="mx-1 text-gray-500"> /
+                            </span>
+
+                            <a href="{% url 'admindashboard' %}" class="text-indigo-600 hover:underline">
+                                    Dashboard
+                            </a>
+                            
+                        </div>
+                        
+                    </div>
+                    <!-- Right Content -->
+                    
+                </div>
+
+                    <div class="mt-6">
+
+
+
+<div class="flex flex-col mt-8">
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+            <div class="overflow-hidden">
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+             
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+                <div class="container mt-4">
+        
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Library Analytics</title>
+                        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    </head>
+                    <body>
+                        <h1>Library Analytics</h1>
+                    
+                        <h2>Books by Genre</h2>
+                        <canvas id="booksByGenreChart" width="400" height="200"></canvas>
+                        
+                        <script>
+                            // Data from Django context
+                            const genreLabels = {{ genre_labels|safe }};
+                            const genreCounts = {{ genre_counts|safe }};
+                    
+                            // Create a bar chart
+                            const ctx = document.getElementById('booksByGenreChart').getContext('2d');
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: genreLabels,
+                                    datasets: [{
+                                        label: 'Number of Books',
+                                        data: genreCounts,
+                                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </body>
+                    </html>
+                    
+
+                    
+                
+                </div>
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
