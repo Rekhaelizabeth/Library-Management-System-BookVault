@@ -148,11 +148,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL='usermanagement.User'
 
-# RAZOR_KEY_ID = 'rzp_test_SAE73pNhXjw2pC'
-# RAZOR_KEY_SECRET = 'jDHj6W4dBaJ1yQPXcqR2Raqe'
+RAZOR_KEY_ID = 'rzp_test_SAE73pNhXjw2pC'
+RAZOR_KEY_SECRET = 'jDHj6W4dBaJ1yQPXcqR2Raqe'
 
-RAZOR_KEY_ID = 'rzp_test_sioVpBlgyBN0f4'
-RAZOR_KEY_SECRET = 'ffj9Ia02aXKqrd6bdAYH0DoR'
+# RAZOR_KEY_ID = 'rzp_test_sioVpBlgyBN0f4'
+# RAZOR_KEY_SECRET = 'ffj9Ia02aXKqrd6bdAYH0DoR'
 
 GOOGLE_BOOKS_API_KEY = 'AIzaSyApbNT6e5IUii_dXvq0ZXllFZTsKrdXbEc'
 
