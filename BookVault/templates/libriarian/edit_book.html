@@ -3,7 +3,7 @@
 {% block title %}Books Page{% endblock %}
 
 {% block content %}
-                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl">Book Dashboard
+                        <h1 class="text-2xl font-medium text-gray-700 sm:text-3xl"> Dashboard
 </h1>
 
                         <div class="hidden mt-3 overflow-y-auto text-sm lg:items-center lg:flex whitespace-nowrap">
@@ -14,7 +14,7 @@
                             <span class="mx-1 text-gray-500"> /
                             </span>
 
-                            <a href="index.html#" class="text-indigo-600 hover:underline">
+                            <a href=" {% url 'librarian_dashboard' %}" class="text-indigo-600 hover:underline">
                                     Dashboard
                             </a>
                             
@@ -22,105 +22,17 @@
                         
                     </div>
                     <!-- Right Content -->
-                    <div class="p-2 border rounded bg-light">
-                        <a href="{% url 'add_book' %}" class="btn btn-primary btn-block">
-                            Add Book
-                        </a>
-                    </div>
+                    
                 </div>
 
                     <div class="mt-6">
-                        <section class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
-        <div>
-            <p class="font-medium text-gray-500">Today’s Money</p>
-
-            <div class="flex items-end">
-                <h2 class="mt-1 text-2xl font-medium text-gray-800">$53,000</h2>
-                <span class="mx-2 text-indigo-500">
-                    +55%
-                </span>
-            </div>
-        </div>
-
-        <div class="p-2 text-white bg-indigo-500 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
-        <div>
-            <p class="font-medium text-gray-500">Today’s Users</p>
-
-            <div class="flex items-end">
-                <h2 class="mt-1 text-2xl font-medium text-gray-800">2,300</h2>
-                <span class="mx-2 text-indigo-500">
-                    +5%
-                </span>
-            </div>
-        </div>
-
-        <div class="p-2 text-white bg-indigo-500 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
-        <div>
-            <p class="font-medium text-gray-500">New Clients</p>
-
-            <div class="flex items-end">
-                <h2 class="mt-1 text-2xl font-medium text-gray-800">+3,052</h2>
-                <span class="mx-2 text-red-500">
-                    -14%
-                </span>
-            </div>
-        </div>
-
-        <div class="p-2 text-white bg-indigo-500 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-        </div>
-    </div>
-
-    <div class="flex items-center justify-between px-6 py-3 bg-white rounded-lg shadow-sm">
-        <div>
-            <p class="font-medium text-gray-500">Total Sales</p>
-
-            <div class="flex items-end">
-                <h2 class="mt-1 text-2xl font-medium text-gray-800">$89,000</h2>
-                <span class="mx-2 text-indigo-500">
-                    +8%
-                </span>
-            </div>
-        </div>
-
-        <div class="p-2 text-white bg-indigo-500 rounded-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-            </svg>
-        </div>
-    </div>
-</section>
 
 
 
-<section class="mt-6 space-y-6 xl:flex xl:space-y-0 xl:-mx-3">
-    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-2/3 xl:p-6">
-        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Book List</h2>
-        
-        <p class="flex items-center mt-2 text-gray-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-500" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-    
-            <span class="mx-2">30 done this month</span>
-        </p>
+
+<section class="mt-3 space-y-6 xl:flex xl:space-y-0 xl:-mx-3">
+    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-3/3 xl:p-6">
+      
     
         <div class="flex flex-col mt-8">
             <div class="overflow-x-auto">
@@ -130,46 +42,98 @@
                      
                         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-                        <div class="container mt-4">
-                            <h2 class="mb-4">Books List</h2>
-                            <div class="row">
+                        <div class="container mt-12">
+                            <!-- Book Cards Section -->
+                            <div class="row mb-4">
                                 {% for book in books %}
                                 <div class="col-md-4 mb-4">
-                                    <div class="card h-100">
-                                        {% comment %} <img src="{{ book.cover_image.url }}" class="card-img-top" alt="Cover image" style="height: 200px; object-fit: cover;"> {% endcomment %}
+                                    <div class="card h-100 shadow-sm">
+                                        <!-- Uncomment the following line if you'd like to display the cover image -->
+                                        <!-- <img src="{{ book.cover_image.url }}" class="card-img-top" alt="Cover image" style="height: 200px; object-fit: cover;"> -->
                                         <div class="card-body">
-                                            
                                             <h5 class="card-title">{{ book.title }}</h5>
                                             <p class="card-text">
-
                                                 <strong>Author:</strong> {{ book.author.first_name }} {{ book.author.last_name }}<br>
                                                 <strong>Genre:</strong> {{ book.genre.name }}<br>
                                                 <strong>Availability:</strong> {{ book.get_availability_display }}<br>
                                             </p>
                                             <p class="card-text">{{ book.description|truncatewords:20 }}</p>
-                                            <a href="{% url 'edit_book' book.id %}">Edit Book</a>
+                                            <a href="{% url 'edit_book' book.id %}" class="btn btn-primary btn-sm">Edit Book</a>
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
-                            <h1>Edit Book</h1>
-                            <form method="post">
-                                {% csrf_token %}
-                                <label>ISBN:</label><input type="text" name="isbn" value="{{ book.isbn }}" required><br>
-                                <label>Cover Image</label><input type="file" name="cover_image"  required><br>
-
-                                <label>Title:</label><input type="text" name="title" value="{{ book.title }}" required><br>
-                                <label>Author ID:</label><input type="number" name="author" value="{{ book.author.id }}" required><br>
-                                <label>Publisher:</label><input type="text" name="publisher" value="{{ book.publisher }}" required><br>
-                                <label>Publication Year:</label><input type="number" name="publication_year" value="{{ book.publication_year }}" required><br>
-                                <label>Language:</label><input type="text" name="language" value="{{ book.language }}" required><br>
-                                <label>Genre ID:</label><input type="number" name="genre" value="{{ book.genre.id }}" required><br>
-                                <label>Description:</label><textarea name="description">{{ book.description }}</textarea><br>
-                                <label>Total Copies:</label><input type="number" name="total_copies" value="{{ book.total_copies }}" required><br>
-                                <button type="submit">Update Book</button>
-                            </form>
+                        
+                            <!-- Edit Book Form Section -->
+                            <div class="row">
+                                <div class="col-lg-8 offset-lg-2">
+                                    <div class="card shadow-sm">
+                                        <div class="card-header bg-primary text-white">
+                                            <h3>Edit Book</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                
+                                                <div class="mb-3">
+                                                    <label for="isbn" class="form-label">ISBN:</label>
+                                                    <input type="text" class="form-control" id="isbn" name="isbn" value="{{ book.isbn }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="cover_image" class="form-label">Cover Image:</label>
+                                                    <input type="file" class="form-control" id="cover_image" name="cover_image">
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="title" class="form-label">Title:</label>
+                                                    <input type="text" class="form-control" id="title" name="title" value="{{ book.title }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="author" class="form-label">Author ID:</label>
+                                                    <input type="number" class="form-control" id="author" name="author" value="{{ book.author.id }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="publisher" class="form-label">Publisher:</label>
+                                                    <input type="text" class="form-control" id="publisher" name="publisher" value="{{ book.publisher }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="publication_year" class="form-label">Publication Year:</label>
+                                                    <input type="number" class="form-control" id="publication_year" name="publication_year" value="{{ book.publication_year }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="language" class="form-label">Language:</label>
+                                                    <input type="text" class="form-control" id="language" name="language" value="{{ book.language }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="genre" class="form-label">Genre ID:</label>
+                                                    <input type="number" class="form-control" id="genre" name="genre" value="{{ book.genre.id }}" required>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="description" class="form-label">Description:</label>
+                                                    <textarea class="form-control" id="description" name="description" rows="4">{{ book.description }}</textarea>
+                                                </div>
+                                                
+                                                <div class="mb-3">
+                                                    <label for="total_copies" class="form-label">Total Copies:</label>
+                                                    <input type="number" class="form-control" id="total_copies" name="total_copies" value="{{ book.total_copies }}" required>
+                                                </div>
+                        
+                                                <button type="submit" class="btn btn-success">Update Book</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        
                         
 
 
@@ -179,12 +143,8 @@
         </div>
     </div>
 
-    <div class="w-full p-4 bg-white rounded-lg shadow-sm xl:mx-3 xl:w-1/3 xl:p-6">
-        <h2 class="text-lg font-medium text-gray-700 capitalize sm:text-xl md:text-2xl">Orders overview</h2>
+    
         
-        <p class="mt-2 text-gray-500">
-            <span class="text-green-500">+30%</span>&nbsp;this month
-        </p>
 
         <div class="flow-root mt-6">
             {% for message in messages %}

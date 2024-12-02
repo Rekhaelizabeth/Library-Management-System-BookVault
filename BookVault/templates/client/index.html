@@ -140,7 +140,7 @@
 									
 								</li>
 								<li class="add-listing">
-									<a href="https://www.flaticon.com/free-icons/notification" title="Notification icons">
+									<a href="{% url 'membernotifications' %}" title="Notification icons">
 										<img src="{% static 'assets/images/notification.png' %}" alt="Notification Icon" class="icon-size" />
 										
 									</a>
@@ -288,15 +288,9 @@
 													<img src="{% static 'assets/img/clutch.png' %}" class="img-fluid" width="70" alt="">
 												</div>
 												<div class="ploi ps-3">
-													<div class="d-flex align-items-center">
-														<i class="fas fa-star text-warning me-1"></i>
-														<i class="fas fa-star text-warning me-1"></i>
-														<i class="fas fa-star text-warning me-1"></i>
-														<i class="fas fa-star text-warning me-1"></i>
-														<i class="fas fa-star text-warning"></i>
-													</div>
+													
 													<div class="explio mt-1">
-														<p class="m-0 text-muted"> Chat forum</p>
+														<a href= {% url 'suggestions' %}><p class="m-0 text-muted">Add Suggestions</p></a>
 													</div>
 												</div>
 											</div>
@@ -479,86 +473,41 @@
 			<!-- ============================ Property By Location ================================== -->
 			<section>
 				<div class="container">
-				
 					<div class="row justify-content-center">
 						<div class="col-lg-7 col-md-8">
 							<div class="sec-heading center">
-								<h2>Top Book By Reviews</h2>
-								<p>One of the best books I’ve ever read; it combines gripping storytelling with profound insights."</p>
+								<h2>Top Books By Reviews</h2>
+								<p>"One of the best books I’ve ever read; it combines gripping storytelling with profound insights."</p>
 							</div>
 						</div>
 					</div>
-					
+			
 					<div class="row justify-content-center g-4">
+						{% for review in top_reviews %}
 						<div class="col-lg-4 col-md-4 col-sm-6">
-							<a href="grid-layout-with-sidebar.html" class="img-wrap">
-									<div class="location_wrap_content visible">
-										<div class="location_wrap_content_first">
-											<h4>California, USA</h4>
-											<span>48 Properties</span>
-										</div>
-										<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
+							<a href="{% url 'book_detail' review.book.id %}" class="img-wrap">
+								<div class="location_wrap_content visible">
+									<div class="location_wrap_content_first">
+										<h4>{{ review.book.title }}</h4>
+										<span>By {{ review.book.author.name }}</span>
+										<span>Rating: {{ review.rating }}/5</span>
 									</div>
-								<div class="img-wrap-background" style="background-image: url({% static 'assets/img/city-3.png' %});"></div>
+									<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
+								</div>
+								<div class="img-wrap-background" 
+									 style="background-image: url({{ review.book.cover_image.url }});">
+								</div>
 							</a>
 						</div>
-						
-						<div class="col-lg-4 col-md-4 col-sm-6">
-							<a href="grid-layout-with-sidebar.html" class="img-wrap">
-									<div class="location_wrap_content visible">
-										<div class="location_wrap_content_first">
-											<h4>Barbingham, USA</h4>
-											<span>73 Properties</span>
-										</div>
-										<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
-									</div>
-								<div class="img-wrap-background" style="background-image: url({% static 'assets/img/city-7.png' %});"></div>
-							</a>
+						{% empty %}
+						<div class="col-lg-12">
+							<p class="text-center">No reviews available at the moment.</p>
 						</div>
-						
-						<div class="col-lg-4 col-md-4 col-sm-6">
-							<a href="grid-layout-with-sidebar.html" class="img-wrap">
-									<div class="location_wrap_content visible">
-										<div class="location_wrap_content_first">
-											<h4>Denever, USA</h4>
-											<span>40 Properties</span>
-										</div>
-										<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
-									</div>
-								<div class="img-wrap-background" style="background-image: url({% static 'assets/img/city-3.png' %});"></div>
-							</a>
-						</div>
-						
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<a href="grid-layout-with-sidebar.html" class="img-wrap">
-									<div class="location_wrap_content visible">
-										<div class="location_wrap_content_first">
-											<h4>Liverpool, London</h4>
-											<span>35 Properties</span>
-										</div>
-										<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
-									</div>
-								<div class="img-wrap-background" style="background-image: url({% static 'assets/img/city-4.png' %});"></div>
-							</a>
-						</div>
-						
-						<div class="col-lg-6 col-md-6 col-sm-6">
-							<a href="grid-layout-with-sidebar.html" class="img-wrap">
-									<div class="location_wrap_content visible">
-										<div class="location_wrap_content_first">
-											<h4>New Orleans, Louisiana</h4>
-											<span>10 Properties</span>
-										</div>
-										<div class="location_btn"><i class="fa fa-arrow-right"></i></div>
-									</div>
-								<div class="img-wrap-background" style="background-image: url({% static 'assets/img/city-5.png' %});"></div>
-							</a>
-						</div>
-						
+						{% endfor %}
 					</div>
-					
 				</div>
 			</section>
+			
 			<!-- ============================ Property By Location End ================================== -->
 			
 		

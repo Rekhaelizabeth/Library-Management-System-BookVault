@@ -39,4 +39,8 @@ urlpatterns = [
     path('userviewprofile/', views.userviewprofile, name='userviewprofile'),
 
     path('cancel_reservation/<int:reservation_id>/', views.cancel_reservation, name='cancel_reservation'),
+    path('top-reviewed-books/', views.top_reviewed_books, name='top_reviewed_books'),
+    
+
+    
 ]

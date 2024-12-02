@@ -2,7 +2,7 @@ from datetime import timedelta
 from django.shortcuts import render,redirect,get_object_or_404
 from django.db.models import Q
 from analytics.views import create_notification
-from usermanagement.models import BookIssueTransaction, MemberProfile, User,BookReservation
+from usermanagement.models import BookIssueTransaction, MemberProfile, Reviews, User,BookReservation
 from .models import Book
 from .models import Author, Genre, Book, Tag
 from django.contrib import messages
@@ -410,3 +410,7 @@ def cancel_reservation(request, reservation_id):
     # Redirect back to the reserved books page
     return redirect('userviewprofile')  # Replace with your URL name for the reserved books page
 
+def top_reviewed_books(request):
+    top_reviews = Reviews.objects.select_related('book', 'book__author') \
+                                  .order_by('-rating')[:10]  # Get top 10 reviews by rating
+    return render(request, 'client/index.html', {'top_reviews': top_reviews})

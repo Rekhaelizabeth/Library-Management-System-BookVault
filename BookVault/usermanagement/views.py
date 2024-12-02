@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from datetime import datetime, timedelta
 from django.http import HttpResponse
@@ -351,6 +352,7 @@ def reserve_book(request, book_id):
         messages.error(request, f"The book '{book.title}' cannot be reserved at the moment.")
     return redirect('book_list')  
 
+from django.contrib import messages
 
 @login_required
 def book_description(request, book_id):
