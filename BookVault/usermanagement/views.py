@@ -13,8 +13,6 @@ from django.contrib.auth import authenticate, login, logout
 from datetime import date
 from django.shortcuts import render, get_object_or_404
 from .models import User
-
-
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.timezone import now
 from .models import BookIssueTransaction
